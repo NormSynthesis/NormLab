@@ -1,0 +1,244 @@
+S
+A
+25
+F
+NaN
+NaN
+0
+S
+N
+(l(*)&f(^)&r(<), prh(Go))
+N
+(l(-)&f(-)&r(<), prh(Go))
+N
+(l(-)&f(<)&r(<), prh(Go))
+N
+(l(-)&f(>)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(-), prh(Go))
+N
+(l(-)&f(^)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(w), prh(Go))
+N
+(l(<)&f(-)&r(<), prh(Go))
+N
+(l(<)&f(<)&r(-), prh(Go))
+N
+(l(<)&f(<)&r(<), prh(Go))
+N
+(l(>)&f(-)&r(-), prh(Go))
+N
+(l(>)&f(-)&r(>), prh(Go))
+N
+(l(>)&f(>)&r(-), prh(Go))
+N
+(l(>)&f(>)&r(>), prh(Go))
+N
+(l(>)&f(^)&r(-), prh(Go))
+N
+(l(>)&f(^)&r(>), prh(Go))
+A
+1
+F
+0.88172495
+0.35963213
+17
+S
+N
+(l(-)&f(-)&r(<), prh(Go))
+N
+(l(-)&f(<)&r(<), prh(Go))
+N
+(l(-)&f(>)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(-), prh(Go))
+N
+(l(-)&f(^)&r(<), prh(Go))
+N
+(l(-)&f(^)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(w), prh(Go))
+N
+(l(<)&f(-)&r(<), prh(Go))
+N
+(l(<)&f(<)&r(-), prh(Go))
+N
+(l(<)&f(<)&r(<), prh(Go))
+N
+(l(<)&f(^)&r(<), prh(Go))
+N
+(l(>)&f(-)&r(-), prh(Go))
+N
+(l(>)&f(-)&r(>), prh(Go))
+N
+(l(>)&f(>)&r(-), prh(Go))
+N
+(l(>)&f(^)&r(-), prh(Go))
+N
+(l(>)&f(^)&r(>), prh(Go))
+A
+1
+F
+0.8395468
+0.37779295
+16
+S
+N
+(l(-)&f(-)&r(<), prh(Go))
+N
+(l(-)&f(<)&r(<), prh(Go))
+N
+(l(-)&f(>)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(-), prh(Go))
+N
+(l(-)&f(^)&r(<), prh(Go))
+N
+(l(-)&f(^)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(w), prh(Go))
+N
+(l(<)&f(-)&r(<), prh(Go))
+N
+(l(<)&f(<)&r(-), prh(Go))
+N
+(l(<)&f(<)&r(<), prh(Go))
+N
+(l(<)&f(^)&r(-), prh(Go))
+N
+(l(<)&f(^)&r(<), prh(Go))
+N
+(l(>)&f(-)&r(-), prh(Go))
+N
+(l(>)&f(-)&r(>), prh(Go))
+N
+(l(>)&f(>)&r(-), prh(Go))
+N
+(l(>)&f(>)&r(>), prh(Go))
+N
+(l(>)&f(^)&r(-), prh(Go))
+N
+(l(>)&f(^)&r(>), prh(Go))
+A
+1
+F
+0.8783281
+0.34592354
+18
+S
+N
+(l(-)&f(-)&r(<), prh(Go))
+N
+(l(-)&f(<)&r(<), prh(Go))
+N
+(l(-)&f(>)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(-), prh(Go))
+N
+(l(-)&f(^)&r(<), prh(Go))
+N
+(l(-)&f(^)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(w), prh(Go))
+N
+(l(<)&f(-)&r(<), prh(Go))
+N
+(l(<)&f(<)&r(-), prh(Go))
+N
+(l(<)&f(<)&r(<), prh(Go))
+N
+(l(<)&f(^)&r(<), prh(Go))
+N
+(l(>)&f(-)&r(-), prh(Go))
+N
+(l(>)&f(-)&r(>), prh(Go))
+N
+(l(>)&f(>)&r(-), prh(Go))
+N
+(l(>)&f(>)&r(>), prh(Go))
+N
+(l(>)&f(^)&r(-), prh(Go))
+N
+(l(>)&f(^)&r(>), prh(Go))
+A
+3
+F
+0.8148966
+0.60693765
+17
+S
+N
+(l(-)&f(-)&r(<), prh(Go))
+N
+(l(-)&f(<)&r(<), prh(Go))
+N
+(l(-)&f(>)&r(>), prh(Go))
+N
+(l(-)&f(^)&r(-), prh(Go))
+N
+(l(-)&f(^)&r(<), prh(Go))
+N
+(l(-)&f(^)&r(w), prh(Go))
+N
+(l(<)&f(-)&r(<), prh(Go))
+N
+(l(<)&f(<)&r(-), prh(Go))
+N
+(l(<)&f(<)&r(<), prh(Go))
+N
+(l(<)&f(^)&r(<), prh(Go))
+N
+(l(>)&f(-)&r(-), prh(Go))
+N
+(l(>)&f(-)&r(>), prh(Go))
+N
+(l(>)&f(>)&r(-), prh(Go))
+N
+(l(>)&f(^)&r(-), prh(Go))
+N
+(l(>)&f(^)&r(>), prh(Go))
+A
+3
+F
+0.91201365
+0.6361518
+15
+S
+N
+(l(*)&f(<)&r(<), prh(Go))
+N
+(l(*)&f(>)&r(>), prh(Go))
+N
+(l(*)&f(^)&r(-), prh(Go))
+N
+(l(*)&f(^)&r(<), prh(Go))
+N
+(l(*)&f(^)&r(>), prh(Go))
+N
+(l(-)&f(-)&r(<), prh(Go))
+N
+(l(-)&f(^)&r(w), prh(Go))
+N
+(l(<)&f(-)&r(<), prh(Go))
+N
+(l(<)&f(<)&r(*), prh(Go))
+N
+(l(<)&f(^)&r(*), prh(Go))
+N
+(l(>)&f(*)&r(*), prh(Go))
+A
+1
+F
+0.8515697
+0.3818329
+18
+S
+N
+(l(>)&f(*)&r(*), prh(Go))
+A
+33
+F
+0.5
+0.5
+6

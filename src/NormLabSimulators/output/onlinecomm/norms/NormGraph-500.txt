@@ -1,0 +1,4 @@
+n:n1	50	1	Active
+n:n2	50	1	Active
+n:n3	50	1	Active
+n:n4	50	1	Active

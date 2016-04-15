@@ -1,0 +1,71 @@
+n:n9	14	2	Active
+n:n16	50	2	Active
+n:n18	50	2	Active
+n:n20	50	2	Active
+n:n22	50	2	Active
+n:n23	50	2	Active
+n:n25	50	2	Active
+n:n27	50	2	Active
+n:n29	50	2	Active
+n:n3	50	1	Generalised
+e:n9 
+n:n1	0	1	Generalised
+e:n9 
+n:n1	0	1	Generalised
+e:n9 
+n:n3	50	1	Generalised
+e:n9 
+n:n12	50	1	Generalised
+e:n9 
+n:n13	50	1	Generalised
+e:n9 
+n:n14	50	1	Generalised
+e:n23 n9 
+n:n15	50	1	Generalised
+e:n16 n9 
+n:n2	50	1	Generalised
+e:n16 
+n:n2	50	1	Generalised
+e:n16 
+n:n17	50	1	Generalised
+e:n18 n9 
+n:n4	50	1	Generalised
+e:n18 
+n:n4	50	1	Generalised
+e:n18 
+n:n19	50	1	Generalised
+e:n20 n9 
+n:n5	50	1	Generalised
+e:n20 
+n:n5	50	1	Generalised
+e:n20 
+n:n21	50	1	Generalised
+e:n22 n9 
+n:n6	50	1	Generalised
+e:n22 
+n:n6	50	1	Generalised
+e:n22 
+n:n7	50	1	Generalised
+e:n23 
+n:n14	50	1	Generalised
+e:n23 n9 
+n:n7	50	1	Generalised
+e:n23 
+n:n24	50	1	Generalised
+e:n9 n25 
+n:n8	50	1	Generalised
+e:n25 
+n:n8	50	1	Generalised
+e:n25 
+n:n26	50	1	Generalised
+e:n27 n9 
+n:n10	50	1	Generalised
+e:n27 
+n:n10	50	1	Generalised
+e:n27 
+n:n28	50	1	Generalised
+e:n29 n9 
+n:n11	50	1	Generalised
+e:n29 
+n:n11	50	1	Generalised
+e:n29 

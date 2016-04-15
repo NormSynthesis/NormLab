@@ -1,0 +1,13 @@
+This is NormLab, a framework to support research on norm synthesis.
+NormLab is composed of two main elements:
+
+1. Two MAS simulators (project NormLabSimulators) that allow to perform
+simulations of a road traffic scenario and an on-line community scenario.
+ 
+2. A Norm Synthesis Machine that can be employed to synthesise norms at
+runtime in the simulations performed by the two aforementioned simulators.
+
+The NormLab software and documentation is licensed under the "New BSD" license.
+You are free to execute, modify and distribute NormLab. 
+
+We hope you enjoy NormLab and you find it useful!

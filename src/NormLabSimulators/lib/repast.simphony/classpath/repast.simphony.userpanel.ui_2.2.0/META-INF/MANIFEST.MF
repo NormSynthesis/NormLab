@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Userpanel
+Bundle-SymbolicName: repast.simphony.userpanel.ui
+Bundle-Version: 2.2.0
+Require-Bundle: repast.simphony.gui,
+ saf.core.ui,
+ repast.simphony.plugin.util,
+ repast.simphony.runtime,
+ repast.simphony.scenario,
+ repast.simphony.core
+Export-Package: 
+ repast.simphony.userpanel.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+
+  <skipIfNotSupported/>
+  
+  <programGroup defaultName="NormLab" location="StartMenu"/>
+  
+  <shortcut
+     name="Run NormLab"
+     programGroup="yes"
+     desktop="yes"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\start_normlab.bat"
+     commandLine=""
+     workingDirectory="$INSTALL_PATH"
+     description="Launches NormLab"
+     iconFile="$INSTALL_PATH\NormLabSimulators\misc\launcher\icons\normlab.bmp"
+     iconIndex="0"
+     initialState="noShow">
+     <createForPack name="NormLab"/>
+  </shortcut>
+    
+  <shortcut
+     name="Documentation"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\NormLabSimulators\docs\index.html"
+     commandLine=""
+	 iconFile="%SystemRoot%\system32\SHELL32.dll"
+     iconIndex="23" 
+     workingDirectory="$INSTALL_PATH\docs"
+     description="NormLab documentation">
+     <createForPack name="Documentation" />
+  </shortcut>
+  
+  <shortcut
+     name="Uninstall NormLab"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\Uninstaller\uninstaller.jar"     
+     commandLine=""
+     iconFile="%SystemRoot%\system32\SHELL32.dll"
+     iconIndex="31" 
+     workingDirectory="$INSTALL_PATH\Uninstaller"
+     description="Removes NormLab from your computer">
+     <createForPack name="Uninstaller" />
+   </shortcut>
+   
+</shortcuts>
