@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<parameters>
+<parameter defaultValue="src/user" name="userStrategyDir"/>
+<parameter defaultValue="repast-settings/TrafficJunction.rs" name="trafficParamsDir"/>
+<parameter defaultValue="repast-settings/OnlineCommunity.rs" name="onlineCommParamsDir"/>
+<parameter defaultValue="parameters.xml" name="paramsFilename"/>
+<parameter defaultValue="experiments/available" name="availableExperimentsDir"/>
+<parameter defaultValue="experiments/performed" name="performedExperimentsDir"/>
+<parameter defaultValue="experiments/.tmp" name="tempExperimentsDir"/>
+<parameter defaultValue=".parameters.onlinecomm" name="experimentParamsTrafficExtension"/>
+<parameter defaultValue=".parameters.traffic" name="experimentParamsOnlineCommExtension"/>
+</parameters>
