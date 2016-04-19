@@ -20,7 +20,6 @@ public class TrafficCamera implements Sensor {
 	private int startRow, stopRow, startCol, stopCol;
 	private TrafficView previousScope, currentScope;
 	private ViewTransition perception;
-	private int ticks = 0;
 	
 	//-----------------------------------------------------------------
 	// Methods
@@ -29,8 +28,8 @@ public class TrafficCamera implements Sensor {
 	/**
 	 * 
 	 */
-	public TrafficCamera(TrafficCameraPosition position, CarMap map)
-	{
+	public TrafficCamera(TrafficCameraPosition position, CarMap map) {
+		
 		this.position = position;
 		this.startRow = position.getStartRow();
 		this.stopRow = position.getStopRow();
@@ -41,7 +40,6 @@ public class TrafficCamera implements Sensor {
 		this.currentScope = new TrafficView(startRow, stopRow, startCol, stopCol);
 		this.previousScope = new TrafficView(startRow, stopRow, startCol, stopCol);
 		this.perception = new ViewTransition(this);
-		
 	}
 
 	/**
@@ -101,7 +99,6 @@ public class TrafficCamera implements Sensor {
 	 */
 	@Override
   public void setPerceptionWindow(int ticks) {
-	  this.ticks = ticks;
   }
 
 	/**

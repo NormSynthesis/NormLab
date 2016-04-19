@@ -88,6 +88,7 @@ public class GenericSynthesisStrategy implements NormSynthesisStrategy {
 	protected List<Norm> normsAddedToNNThisCycle;
 	protected List<Norm> normsAddedToNSThisCycle;
 	protected List<Norm> normsRemovedFromNSThisCycle;
+	protected List<Norm> normsActivatedDuringGeneration;
 	protected List<Norm> visitedNorms;
 
 	//---------------------------------------------------------------------------
@@ -199,14 +200,15 @@ public class GenericSynthesisStrategy implements NormSynthesisStrategy {
 		this.visitedNorms.clear();
 
 		/* Norm generation */
-		this.normGenerator.step(viewTransitions, conflicts);
+		normsActivatedDuringGeneration = 
+				this.normGenerator.step(viewTransitions, conflicts);
 
 		/* Norm evaluation */
 		this.normEvaluator.step(viewTransitions, normApplicability,
 				normCompliance, normGroupCompliance);
 
 		/* Norm refinement */
-		this.normRefiner.step(normApplicability, new ArrayList<Norm>() /*Remove this ArrayList...*/);
+		this.normRefiner.step(normApplicability, normsActivatedDuringGeneration);
 
 		/* Manage lists that control new additions to the normative network,
 		 * normative system, as well as norms that have been removed */

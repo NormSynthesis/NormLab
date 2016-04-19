@@ -2,10 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src/onlinecomm"/>
 	<classpathentry kind="src" path="src/examples"/>
+	<classpathentry kind="src" path="src/traffic"/>
 	<classpathentry kind="src" path="src/common"/>
 	<classpathentry kind="src" path="src/user"/>
-	<classpathentry kind="src" path="src/batch"/>
-	<classpathentry kind="src" path="src/traffic"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NormSynthesisMachine"/>
 	<classpathentry kind="lib" path="lib/ejml-0.20.jar"/>

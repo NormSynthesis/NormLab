@@ -30,6 +30,7 @@ import es.csic.iiia.nsm.norm.refinement.generalisation.NormGeneraliser;
 import es.csic.iiia.nsm.norm.refinement.generalisation.NormIntersection;
 import es.csic.iiia.nsm.norm.refinement.generalisation.NullNormGeneraliser;
 import es.csic.iiia.nsm.norm.refinement.generalisation.OptimisticNormGeneraliser;
+import es.csic.iiia.nsm.norm.refinement.synergies.NormSynergiesOperator;
 import es.csic.iiia.nsm.sensing.ViewTransition;
 import es.csic.iiia.nsm.strategy.GenericOperators;
 
@@ -56,6 +57,7 @@ public class NormRefiner {
 	protected NormGeneraliser normGeneraliser;
 	protected NormGeneraliser.Approach genApproach; 
 	protected NormGeneralisationMode genMode; 
+	protected NormSynergiesOperator normSynergiesOperator;
 	protected int genStep;
 
 	protected Map<String, NormIntersection> normIntersections;
@@ -97,6 +99,9 @@ public class NormRefiner {
 		this.normClassifier = new NormClassifier(normEvDimensions, nsmSettings,
 				normativeNetwork, normGroupNetwork, operators, nsMetrics);
 
+		this.normSynergiesOperator = new NormSynergiesOperator(normativeNetwork, 
+				nsMetrics, random);
+		
 		/* Create norm generaliser */
 		switch(this.genApproach) {
 		case Conservative: 
@@ -126,11 +131,20 @@ public class NormRefiner {
 		List<Norm> normsToActivate = new ArrayList<Norm>();
 		List<Norm> normsToDeactivate = new ArrayList<Norm>();
 		List<Norm> normsToGeneralise = new ArrayList<Norm>();
+		List<Norm> normsToSubstitute = new ArrayList<Norm>();
+		
 		boolean isEffective, isNecessary;
 		boolean isIneffective, isUnnecessary;
+		boolean isSubstitutable;
 		boolean classifiedInEffectiveness;
 		boolean isGeneralisable;
 
+		/* First, deactivate all those norms that have a substitutability 
+		 * relationship with those norms that have been activated during 
+		 * the norm generation phase */
+		normsToDeactivate = this.checkInconsistencies(
+				normsActivatedDuringGeneration);
+		
 		/* Compute norms that must be revised */
 		List<Norm> normsToRevise = this.checkNormsToRevise(normApplicability);
 
@@ -146,6 +160,7 @@ public class NormRefiner {
 			isIneffective = attributes.contains(NormAttribute.Ineffective);
 			isUnnecessary = attributes.contains(NormAttribute.Unnecessary);
 			isGeneralisable = attributes.contains(NormAttribute.Generalisable);
+			isSubstitutable = attributes.contains(NormAttribute.Substitutable);
 			classifiedInEffectiveness = isEffective || isIneffective;
 
 			/* If the norm is whether ineffective or unnecessary, then deactivate
@@ -166,13 +181,99 @@ public class NormRefiner {
 			if(isGeneralisable) {
 				normsToGeneralise.add(norm);
 			}
+			
+			/* Check substitutability */
+			if(isSubstitutable) {
+				List<Norm> subsNorms = this.normClassifier.getSubstitutableNorms(norm);
+				
+				for(Norm norm2 : subsNorms) {
+					Norm normToSubstitute = 
+							this.normSynergiesOperator.chooseToSubstitute(norm, norm2);
+					
+					Norm substituter;
+					if(norm.equals(normToSubstitute)) {
+						substituter = norm2;
+					}
+					else {
+						substituter = norm;
+					}
+					
+					/* Add norm to be substituted and tag substituter */
+					normsToSubstitute.add(normToSubstitute);
+					this.normativeNetwork.addAttribute(substituter, 
+							NormAttribute.Substituter);
+					
+					System.out.println("Substituting norm " + normToSubstitute);
+					System.out.println("Substituter " + substituter);
+					System.out.println("---------------------------------------");
+				}
+			}
 		}
 
 		/* Activate, deactivate and generalise norms */
 		this.activateUp(normsToActivate);
 		this.deactivateUp(normsToDeactivate);
 		this.generaliseUp(normsToGeneralise);
+		this.substitute(normsToSubstitute);
 	}
+
+	/**
+	 * @param normsActivatedDuringGeneration
+	 */
+  private List<Norm> checkInconsistencies(
+  		List<Norm> normsActivatedDuringGeneration) {
+  	
+  	List<Norm> normsToDeactivate = new ArrayList<Norm>();
+  	
+  	for(Norm norm : normsActivatedDuringGeneration) {
+			List<Norm> substitutable = normativeNetwork.
+					getSubstitutableNorms(norm);
+			
+			if(!substitutable.isEmpty()) {
+				this.normativeNetwork.addAttribute(norm, NormAttribute.Substituter);
+				System.out.println("Ractivation of substitutable norm "
+						+ "(maybe it's complementary... " + norm);
+			}
+
+			for(Norm normToSubstitute : substitutable) {
+				normsToDeactivate.add(normToSubstitute);
+				this.normativeNetwork.removeAttribute(normToSubstitute, 
+						NormAttribute.Substituter);
+
+				NormGroupCombination nGrComb = this.normGroupNetwork.
+						getNormGroupCombination(norm, normToSubstitute);
+
+				if(!this.potentialComplementaryPairs.containsKey(nGrComb)) {
+					this.potentialComplementaryPairs.put(nGrComb, 0);
+				}
+				int numReactivations = this.potentialComplementaryPairs.get(nGrComb);
+				this.potentialComplementaryPairs.put(nGrComb, numReactivations+1);
+
+				/* Cycle detection. If the pair of norms have substituted one another
+				 * 5 times or more, then remove the substitutability relationship
+				 * (due to a possible false positive) */
+				if(numReactivations > 5) {
+					this.normativeNetwork.removeSubstitutability(norm, normToSubstitute);
+				}
+
+				/* Update complexities metrics */
+				this.nsMetrics.incNumNodesVisited();
+			}
+		}
+		return normsToDeactivate;
+  }
+
+	/**
+	 * @param normsToSubstitute
+	 */
+  private void substitute(List<Norm> norms) {
+  	List<Norm> visited = new ArrayList<Norm>();
+  	
+  	for(Norm norm : norms) {
+  		this.deactivateUp(norm, visited);
+  		this.operators.substitute(norm);
+  	}  
+  }
 
 	/**
 	 * 
@@ -192,6 +293,7 @@ public class NormRefiner {
 	 */
 	private void deactivateUp(List<Norm> norms) {
 		List<Norm> visited = new ArrayList<Norm>();
+		
 		for(Norm norm : norms) {
 			this.deactivateUp(norm, visited);
 		}

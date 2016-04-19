@@ -152,7 +152,7 @@ public interface NormSynthesisSettings {
 	 * @see Goal
 	 * @see NormGroupUtility
 	 */
-	public double getNormGeneralisationBoundary(EvaluationCriteria dim, Goal goal);
+	public double getNormGeneralisationThreshold(EvaluationCriteria dim, Goal goal);
 	
 	/**
 	 * 
@@ -183,7 +183,7 @@ public interface NormSynthesisSettings {
 	
 	/**
 	 * Returns the boundary below which a norm's utility is
-	 * considered low enough to specialise the norm 
+	 * considered low enough to deactivate the norm 
 	 * 
 	 * @param dim the dimension of the utility (effectiveness/necessity)
 	 * @param goal the system goal of the utility
@@ -192,21 +192,21 @@ public interface NormSynthesisSettings {
 	 * @see Goal
 	 * @see NormGroupUtility
 	 */
-	public double getNormDeactivationBoundary(EvaluationCriteria dim, Goal goal);
-	
+	public double getNormDeactivationThreshold(EvaluationCriteria dim, Goal goal);
+
 	/**
 	 * Returns the boundary above which a norm's utility is
-	 * considered high enough to be generalised with other norms 
+	 * considered high enough to activate the norm 
 	 * 
 	 * @param dim the dimension of the utility (effectiveness/necessity)
-	 * @param goal the goal of the utility
-	 * @return the generalisation boundary
+	 * @param goal the system goal of the utility
+	 * @return the specialisation boundary
 	 * @see EvaluationCriteria
 	 * @see Goal
 	 * @see NormGroupUtility
 	 */
-	public double getNormDeactivationBoundaryEpsilon(EvaluationCriteria dim, Goal goal);
-
+	public double getNormActivationThreshold(EvaluationCriteria dim, Goal goal);
+	
 	/**
 	 * 
 	 * @return

@@ -83,7 +83,7 @@ public final class RepastRunner {
 		String runtimePath = classpath;
 		runtimePath = addBatchClasspath(runtimePath);
 		runtimePath = addUserClasspath(runtimePath);
-		
+
 		/* Create Repast process and execute it */
 		ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", runtimePath,
 				repastBatchClass, "-params", paramsFile, scenarioDir); 

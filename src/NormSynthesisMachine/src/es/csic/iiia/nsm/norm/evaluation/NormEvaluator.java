@@ -23,7 +23,7 @@ import es.csic.iiia.nsm.norm.evaluation.group.JointContext;
 import es.csic.iiia.nsm.norm.evaluation.group.NormGroup;
 import es.csic.iiia.nsm.norm.evaluation.group.NormGroupOutcomes;
 import es.csic.iiia.nsm.norm.evaluation.group.NormGroupUtilityFunction;
-import es.csic.iiia.nsm.norm.evaluation.group.QMA_NormGroupUtilityFunction;
+import es.csic.iiia.nsm.norm.evaluation.group.RL_NormGroupUtilityFunction;
 import es.csic.iiia.nsm.norm.network.NetworkNodeState;
 import es.csic.iiia.nsm.norm.network.NormativeNetwork;
 import es.csic.iiia.nsm.norm.network.group.NormGroupNetwork;
@@ -134,14 +134,15 @@ public class NormEvaluator {
 
 		/* Create norm evaluation functions */
 		if(nEvMechanism == NormEvaluator.Mechanism.BollingerBands) {
-			this.normUtilityFunction = new RL_NormUtilityFunction(nsMetrics);
+			this.normUtilityFunction = new RL_NormUtilityFunction(nsMetrics, 
+					nsmSettings.getNormEvaluationLearningRate());
 		}
 		else {
 			this.normUtilityFunction = new QMA_NormUtilityFunction(nsMetrics);	
 		}
 
 		/* Create norm group evaluation functions */
-		this.nGroupUtilityFunction = new QMA_NormGroupUtilityFunction();
+		this.nGroupUtilityFunction = new RL_NormGroupUtilityFunction(nsMetrics,	0.1);
 	}
 
 	/**
@@ -488,16 +489,20 @@ public class NormEvaluator {
 				ag1Context = this.dmFunctions.agentContext(agent1Id, pView);
 				ag2Context = this.dmFunctions.agentContext(agent2Id, pView);
 
-				/* The agents perceive each other */
-				if(ag1Context.getPerceivedAgentsIds().contains(agent2Id) &&
-						ag2Context.getPerceivedAgentsIds().contains(agent1Id)) {
+				/* Check that none of the agents has a null (out of bounds) context */
+				if(ag1Context != null && ag2Context != null) {
 
-					JointContext jointContext = new JointContext();
-					jointContext.addAgentContext(agent1Id, ag1Context);
-					jointContext.addAgentContext(agent2Id, ag2Context);
+					/* If the agents perceive each other */
+					if(ag1Context.getPerceivedAgentsIds().contains(agent2Id) &&
+							ag2Context.getPerceivedAgentsIds().contains(agent1Id)) {
 
-					/* Add joint context to the return list */
-					jointContexts.add(jointContext);
+						JointContext jointContext = new JointContext();
+						jointContext.addAgentContext(agent1Id, ag1Context);
+						jointContext.addAgentContext(agent2Id, ag2Context);
+
+						/* Add joint context to the return list */
+						jointContexts.add(jointContext);
+					}
 				}
 			}
 		}

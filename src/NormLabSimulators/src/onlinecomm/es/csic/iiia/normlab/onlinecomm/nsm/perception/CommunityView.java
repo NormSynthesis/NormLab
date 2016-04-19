@@ -46,6 +46,7 @@ public class CommunityView implements View {
 		ArrayList<Long> agentIds = new ArrayList<Long>();
 		int uploadListSize = actualUploadList.size();
 
+		
 		for(int i = 0 ; i < uploadListSize ; i++){
 			IContent content = actualUploadList.get(i);
 			agentIds.add((long) content.getCreatorAgent());

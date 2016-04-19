@@ -83,11 +83,17 @@ public class PerformanceRangeChart {
 		this.nsm = nsm;
 		this.node = node;
 		
+		NormEvaluator.Mechanism nEvMechanism = Mechanism.MovingAverage;
+		
 		if(node instanceof Norm) {
 			this.network = nsm.getNormativeNetwork();
+
+			nEvMechanism = nsm.getNormSynthesisSettings().
+					getNormEvaluationMechanism();
 		}
 		else if (node instanceof NormGroup) {
 			this.network = nsm.getNormGroupNetwork();
+			nEvMechanism = Mechanism.BollingerBands;
 		}
 		
 		Utility utility = network.getUtility(node);
@@ -101,28 +107,29 @@ public class PerformanceRangeChart {
 		
 		this.continuousStroke = new BasicStroke(ACTIVE_NORM_WIDTH);
 		
-		this.thresholdStroke = new BasicStroke(ACTIVE_NORM_WIDTH + 3,
+		this.thresholdStroke = new BasicStroke(ACTIVE_NORM_WIDTH + 1,
 				BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, 
 				new float[] {4f, 50f}, 0.0f);
 		
 		this.seriesColors = new ArrayList<Color>();
-		this.seriesColors.add(Color.RED);
+		this.seriesColors.add(Color.DARK_GRAY);
 		this.seriesColors.add(Color.BLUE);
+		this.seriesColors.add(Color.ORANGE);
 		this.seriesColors.add(Color.YELLOW);
-		this.seriesColors.add(Color.GREEN);
 		this.seriesColors.add(Color.BLACK);
 		
 		/* Create chart's elements */
-		this.createChart();
+		this.createChart(nEvMechanism);
 	}
 
 	/**
 	 * Creates the chart that shows the performance range
 	 * of the given {@code node}
+	 * @param nEvMechanism 
 	 * 
 	 * @param node the given node
 	 */
-	private void createChart() {
+	private void createChart(NormEvaluator.Mechanism nEvMechanism) {
 		String xLabel, yLabel;
 		xLabel = "Num Evaluation";
 		yLabel = "Score";
@@ -154,12 +161,10 @@ public class PerformanceRangeChart {
 				getNormsPerformanceRangesSize());
 		
 		/* Add extra series depending on the norm synthesis method */
-		NormEvaluator.Mechanism evMech = 
-				nsm.getNormSynthesisSettings().getNormEvaluationMechanism();
-		if(evMech == Mechanism.BollingerBands) {
+		if(nEvMechanism == Mechanism.BollingerBands) {
 			this.addBBSeries(node);
 		}
-		else if(evMech == Mechanism.MovingAverage) {
+		else if(nEvMechanism == Mechanism.MovingAverage) {
 			this.addQMASeries(node);
 		}
 	}
@@ -190,11 +195,12 @@ public class PerformanceRangeChart {
   	this.addSeries(this.createSeries(UtilityChartSeriesType.Average));
 		this.addSeries(this.createSeries(UtilityChartSeriesType.TopBoundary));
 		this.addSeries(this.createSeries(UtilityChartSeriesType.BottomBoundary));
-		this.addSeries(this.createSeries(UtilityChartSeriesType.AlphaSpec));
+		this.addSeries(this.createSeries(UtilityChartSeriesType.ActThreshold));
+		this.addSeries(this.createSeries(UtilityChartSeriesType.DeactThreshold));
 
 		/* Set punctual values series style */
 		renderer.setSeriesStroke(0, this.dottedStroke, false);
-		renderer.setSeriesPaint(0, Color.RED);
+		renderer.setSeriesPaint(0, Color.DARK_GRAY);
 		
 		/* Set average and bollinger bands series style */
 		for(int i=1; i<=3; i++) {
@@ -204,7 +210,10 @@ public class PerformanceRangeChart {
 
 		/* Set threshold stroke style */
 		renderer.setSeriesStroke(4, this.thresholdStroke, false);
-		renderer.setSeriesPaint(4, Color.BLACK);
+		renderer.setSeriesPaint(4, Color.green);
+		
+		renderer.setSeriesStroke(5, this.thresholdStroke, false);
+		renderer.setSeriesPaint(5, Color.red);
   }
   
 	/**
@@ -212,13 +221,12 @@ public class PerformanceRangeChart {
 	 */
   private void addQMASeries(NetworkNode node) {
   	this.addSeries(this.createSeries(UtilityChartSeriesType.Average));
-  	this.addSeries(this.createSeries(UtilityChartSeriesType.AlphaSpecTopBand));
-  	this.addSeries(this.createSeries(UtilityChartSeriesType.AlphaSpec));
-  	this.addSeries(this.createSeries(UtilityChartSeriesType.AlphaSpecBottomBand));
+  	this.addSeries(this.createSeries(UtilityChartSeriesType.ActThreshold));
+  	this.addSeries(this.createSeries(UtilityChartSeriesType.DeactThreshold));
   	
 		/* Set punctual values series style */
 		renderer.setSeriesStroke(0, this.dottedStroke, false);
-		renderer.setSeriesPaint(1, Color.RED);
+		renderer.setSeriesPaint(0, Color.DARK_GRAY);
 		
 		/* Set average series style */
 		renderer.setSeriesStroke(1, this.continuousStroke, false);
@@ -226,11 +234,11 @@ public class PerformanceRangeChart {
 
 		/* Set threshold stroke style */
 		renderer.setSeriesStroke(2, this.thresholdStroke, false);
-		renderer.setSeriesPaint(2, Color.BLACK);
-		renderer.setSeriesStroke(3, this.continuousStroke, false);
-		renderer.setSeriesPaint(3, Color.GREEN);
-		renderer.setSeriesStroke(4, this.thresholdStroke, false);
-		renderer.setSeriesPaint(4, Color.BLACK);
+		renderer.setSeriesPaint(2, Color.green);
+		renderer.setSeriesStroke(3, this.thresholdStroke, false);
+		renderer.setSeriesPaint(3, Color.red);
+//		renderer.setSeriesStroke(4, this.thresholdStroke, false);
+//		renderer.setSeriesPaint(4, Color.BLACK);
   }
 
 	/**

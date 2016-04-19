@@ -27,6 +27,7 @@ public class RL_NormUtilityFunction implements NormUtilityFunction {
 
 	private Map<Norm, List<SetOfPredicatesWithTerms>> negRewardedNorms;
 	private NormSynthesisMetrics nsMetrics;
+	private double alpha;
 	
 	//---------------------------------------------------------------------------
 	// Methods 
@@ -35,9 +36,10 @@ public class RL_NormUtilityFunction implements NormUtilityFunction {
 	/**
 	 * Constructor
 	 */
-	public RL_NormUtilityFunction(NormSynthesisMetrics nsMetrics) {
+	public RL_NormUtilityFunction(NormSynthesisMetrics nsMetrics, double alpha) {
 		this.negRewardedNorms = new HashMap<Norm, List<SetOfPredicatesWithTerms>>();
 		this.nsMetrics = nsMetrics;
+		this.alpha = alpha;
 	}
 
 	/**
@@ -78,7 +80,7 @@ public class RL_NormUtilityFunction implements NormUtilityFunction {
 
 				oldScore = nNetwork.getUtility(appNorm).getScore(dim, goal);
 				reward = (float) nANoC / (nAC + nANoC); 
-				score = (float) (oldScore + 0.1 * (reward - oldScore));
+				score = (float) (oldScore + alpha * (reward - oldScore));
 				nNetwork.setScore(appNorm, dim, goal, score);
 
 				/* If the norm has been negatively rewarded, add it to the
@@ -101,7 +103,7 @@ public class RL_NormUtilityFunction implements NormUtilityFunction {
 
 				oldScore = nNetwork.getUtility(violNorm).getScore(dim, goal);
 				reward = (float) nVC / (nVC + nVNoC); 
-				score = (float) (oldScore + 0.1 * (reward - oldScore));
+				score = (float) (oldScore + alpha * (reward - oldScore));
 				nNetwork.setScore(violNorm, dim, goal, score);
 
 				/* If the norm has been negatively rewarded, add it to the

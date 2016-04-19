@@ -22,6 +22,7 @@ public class Matrix<T> implements CloneablePublic<Matrix<T>>{
 			case rot90: return rot240;
 			case rot180: return rot180;
 			case rot240: return rot90;
+			default: break;
 			}
 			return rot0;
 		}
@@ -31,6 +32,7 @@ public class Matrix<T> implements CloneablePublic<Matrix<T>>{
 			case rot90: return 1;
 			case rot180: return 2;
 			case rot240: return 3;
+			default:	break;
 			}
 			return 0;
 		}
@@ -49,6 +51,7 @@ public class Matrix<T> implements CloneablePublic<Matrix<T>>{
 			case rot90: return 1;
 			case rot180: return 2;
 			case rot240: return 3;
+			default:	break;
 			}
 			return 0;
 		}
@@ -99,7 +102,10 @@ public class Matrix<T> implements CloneablePublic<Matrix<T>>{
 		this.matrix = m.matrix;
 	}
 
-	// TODO only rotates square matrices at the moment :-P
+	/**
+	 * 
+	 * @return
+	 */
 	private Matrix<T> rot90(){
 		Matrix<T> m = new Matrix<T>(dimY,dimX,name+"90");
 		for(int x = 0; x<dimX; x++)

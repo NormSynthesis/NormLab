@@ -53,8 +53,8 @@ public class ContextData {
 	private List<IContent> mostViewListPhotoVideo;
 	
 	private List<IContent> actualUploadList;
-	private List<IContent> actualViewList;
-	private List<IContent> actualComplaintList;
+	private List<IContent> viewsThisTick;
+	private List<IContent> complaintsThisTick;
 	
 	//Type of view profile
 	private int contentByOrder = 0;
@@ -110,8 +110,8 @@ public class ContextData {
 		mostViewListForum = Collections.synchronizedList(new CircularFifoQueue<IContent>(contentsQueueSize / 3));
 		mostViewListPhotoVideo = Collections.synchronizedList(new CircularFifoQueue<IContent>(contentsQueueSize / 3));
 		actualUploadList = Collections.synchronizedList(new CircularFifoQueue<IContent>(contentsQueueSize / 3));
-		actualViewList = Collections.synchronizedList(new CircularFifoQueue<IContent>(contentsQueueSize / 3));
-		actualComplaintList = Collections.synchronizedList(new CircularFifoQueue<IContent>(contentsQueueSize / 3));
+		viewsThisTick = Collections.synchronizedList(new CircularFifoQueue<IContent>(contentsQueueSize / 3));
+		complaintsThisTick = Collections.synchronizedList(new CircularFifoQueue<IContent>(contentsQueueSize / 3));
 		allContents = Collections.synchronizedList(new CircularFifoQueue<IContent>(contentsQueueSize));
 		
 		collection = new XYSeriesCollection();
@@ -336,10 +336,10 @@ public class ContextData {
 		return actualUploadList;
 	}
 	public List<IContent> getActualViewList() {
-		return actualViewList;
+		return viewsThisTick;
 	}
 	public List<IContent> getActualComplaintList() {
-		return actualComplaintList;
+		return complaintsThisTick;
 	}
 	
 	//Method to get random integers
@@ -452,9 +452,9 @@ public class ContextData {
 	 */
 	public void reset()
 	{
-		this.actualComplaintList.clear();
+		this.complaintsThisTick.clear();
 		this.actualUploadList.clear();
-		this.actualViewList.clear();
+		this.viewsThisTick.clear();
 	}
 
 	public void setActualNumComplaints(int size) {

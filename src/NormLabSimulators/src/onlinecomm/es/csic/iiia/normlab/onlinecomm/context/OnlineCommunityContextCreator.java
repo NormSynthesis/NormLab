@@ -129,7 +129,7 @@ public class OnlineCommunityContextCreator implements ContextBuilder<Object> {
 		this.createScenario();
 		
 		/* Add user population to the scenario */
-		this.addUserPopulation(population.getUsers(), 
+		this.addUserPopulation(population, 
 				ocManager.getPredicatesDomains());
 
 		
@@ -285,16 +285,19 @@ public class OnlineCommunityContextCreator implements ContextBuilder<Object> {
 	 * @param users
 	 *            ArrayList of agents that are going to take part in the simulation.
 	 */
-	public void addUserPopulation(List<OnlineCommunityUser> users,
+	public void addUserPopulation(OnlineCommunityPopulation population,
 			PredicatesDomains predDomains) {
 		int row = 0;
 
+		List<OnlineCommunityUser> users = population.getUsers();
+		int popSize = population.getSize();
+		
 		for(int usrIdx = 0; usrIdx < users.size(); usrIdx++){
 			for(int numUsers = 0; numUsers < users.get(usrIdx).getQuantity(); 
 					numUsers++) {
 				
 				row = contextData.getNewRow();
-				createAgent(users.get(usrIdx), predDomains, row);
+				createAgent(users.get(usrIdx), predDomains, row, popSize);
 				contextData.setNumAgents(contextData.getNumAgents()+1);
 			}
 		}
@@ -307,7 +310,7 @@ public class OnlineCommunityContextCreator implements ContextBuilder<Object> {
 	 * 			Object with all the information to create a new one.
 	 */
 	private void createAgent(OnlineCommunityUser agent, 
-			PredicatesDomains predDomains, int row) {
+			PredicatesDomains predDomains, int row, int popSize) {
 
 		UploadProfile up = new UploadProfile(
 				agent.getUploadProfile().getUploadProbability(),
@@ -347,26 +350,27 @@ public class OnlineCommunityContextCreator implements ContextBuilder<Object> {
 		OnlineCommunityNormEngine normEngine = ocManager.getNormEngine();
 		OnlineCommunityFactFactory factFactory = ocManager.getFactFactory();
 		
+		int numViews = Math.max(30, popSize/2);
 		switch (agent.getType()) {
 		case 1:
 			commAgent = new ModerateUser(reasoner, predDomains,space, grid,
-					row, up, vp, cp, normEngine, factFactory);
+					row, up, vp, cp, normEngine, factFactory, numViews);
 			break;
 		case 2:
 			commAgent = new SpammerUser(reasoner, predDomains,space, grid, 
-					row, up, vp, cp, normEngine, factFactory);
+					row, up, vp, cp, normEngine, factFactory, numViews);
 			break;
 		case 3:
 			commAgent = new PornographicUser(reasoner, predDomains,space, grid,
-					row, up, vp, cp, normEngine, factFactory);
+					row, up, vp, cp, normEngine, factFactory, numViews);
 			break;
 		case 4:
 			commAgent = new ViolentUser(reasoner, predDomains,space, grid,
-					row, up, vp, cp, normEngine, factFactory);
+					row, up, vp, cp, normEngine, factFactory, numViews);
 			break;
 		case 5:
 			commAgent = new RudeUser(reasoner, predDomains,space, grid, 
-					row, up, vp, cp, normEngine, factFactory);
+					row, up, vp, cp, normEngine, factFactory, numViews);
 			break;
 
 		default:

@@ -83,8 +83,10 @@ public class NormGenerator {
 	 * 
 	 * @return
 	 */
-	public void step(List<ViewTransition> viewTransitions,
+	public List<Norm> step(List<ViewTransition> viewTransitions,
 			Map<Goal,List<Conflict>> conflicts) {
+		
+		List<Norm> activatedNorms = new ArrayList<Norm>();
 		
 		/* Collect perceptions from the MAS */
 		this.getMASPerceptions(viewTransitions);
@@ -97,14 +99,18 @@ public class NormGenerator {
 
 		/* Process created norms */
 		for(Norm norm : createdNorms)	{
-			this.processCreatedNorm(norm);
+			this.processCreatedNorm(norm, activatedNorms);
 		}
+		
+		return activatedNorms;
 	}
 
 	/**
 	 * @param norm
+	 * @param activatedNorms 
 	 */
-  private void processCreatedNorm(Norm norm) {
+  private void processCreatedNorm(Norm norm, List<Norm> activatedNorms) {
+  	
   	SetOfPredicatesWithTerms precondition = norm.getPrecondition();
 		NormModality modality = norm.getModality();
 		EnvironmentAgentAction action = norm.getAction();
@@ -126,6 +132,11 @@ public class NormGenerator {
 		if(this.nGenerationApproach == NormGenerator.Approach.Reactive) {
 			this.operators.activate(norm);
 			this.operators.reset(norm);
+			
+			/* This is necessary to exploit norm synergies (when norm generation
+			 * is reactive) in order to deactivate norms that are substitutable 
+			 * with norms that have been activated during norm generation */
+			activatedNorms.add(norm);
 		}
 		else {
 			this.operators.hibernate(norm);
@@ -189,9 +200,6 @@ public class NormGenerator {
 			if(this.normsAppliedToAgentContext(agContext)) {
 				continue;
 			}
-
-			if(agAction.toString().equals("Stop"))
-				System.out.println();
 			
 			/* Create a new norm prohibiting that action in that context */
 			SetOfPredicatesWithTerms precondition = agContext.getDescription();
@@ -209,7 +217,7 @@ public class NormGenerator {
 	}
 
 	/**
-	 * Returns <tt>true</tt> if some norm (represented) applies to the 
+	 * Returns <tt>true</tt> if any (represented) norm applies to the 
 	 * agent context received as a parameter
 	 * 
 	 * @param agContext an agent context
@@ -224,8 +232,9 @@ public class NormGenerator {
 			NetworkNodeState nState = this.normativeNetwork.getState(n);
 			boolean isHibernated = nState == NetworkNodeState.Hibernated;
 			boolean isRepresented = this.normativeNetwork.isRepresented(n);
+			boolean isSubstituted = nState == NetworkNodeState.Substituted;
 			
-			if(isRepresented || isHibernated) {
+			if(isRepresented || isHibernated || isSubstituted) {
 				return true;
 			}
 		}

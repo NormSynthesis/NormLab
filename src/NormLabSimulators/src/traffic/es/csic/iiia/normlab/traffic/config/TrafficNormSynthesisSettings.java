@@ -19,6 +19,8 @@ public class TrafficNormSynthesisSettings extends DefaultNormSynthesisSettings {
 	 * 
 	 */
 	public TrafficNormSynthesisSettings() {
+		super();
+		
 		Goal gCols = new Gcols();
 		this.systemGoals = new ArrayList<Goal>();
 		this.systemGoals.add(gCols);

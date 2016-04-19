@@ -42,6 +42,8 @@ import es.csic.iiia.normlab.launcher.onlinecomm.OnlineCommunityPopulation;
 import es.csic.iiia.normlab.launcher.onlinecomm.OnlineCommunityPopulation.UserType;
 import es.csic.iiia.normlab.launcher.onlinecomm.UploadProfile;
 import es.csic.iiia.normlab.launcher.onlinecomm.ViewProfile;
+import es.csic.iiia.normlab.launcher.utils.JDecimalField;
+import es.csic.iiia.normlab.launcher.utils.JIntegerField;
 
 /**
  *
@@ -51,7 +53,8 @@ public class DialogPopulationConfigurator extends JDialog {
 
 	/* */
 	private static final long serialVersionUID = 8476544015656480598L;
-
+	private static String populationName;
+	
 	/* */
 	private String availablePopsDir = "files/onlinecomm/populations/";
 	private String patternPopsDir = "files/onlinecomm/populations/.pattern/";
@@ -75,8 +78,7 @@ public class DialogPopulationConfigurator extends JDialog {
 	private Map<UserType, Map<String, String>> uploadProfile;
 	private Map<UserType, Map<String, String>> viewProfile;
 	private Map<UserType, Map<String, String>> complainProfile;
-
-	private String populationName;
+	
 	private String numModerates;
 	private String numSpammers;
 	private String numPornographics;
@@ -86,20 +88,38 @@ public class DialogPopulationConfigurator extends JDialog {
 	private List<UserType> userTypes;
 	private UserType userType;
 	
+	private boolean userSaved;
 	
 	/**
 	 * Creates new form DialogChoosePopulation
+	 * @param population2 
 	 */
-	public DialogPopulationConfigurator(Frame parent, boolean modal) {
+	public DialogPopulationConfigurator(Frame parent, boolean modal,
+			String population) {
+		
 		super(parent, modal);
 		this.prepareDataStructures();
 		
 		initComponents();
 		setResizable(false);
 
+		populationName = population;
 		this.loadAvailablePopulations();
+		if(!population.equals("")) {
+			this.cbAvailablePop.setSelectedItem(population);
+		}
+		
+		userSaved = false;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean userSaved() {
+		return this.userSaved;
+	}
+	
 	/**
 	 * 
 	 * @return
@@ -200,7 +220,7 @@ public class DialogPopulationConfigurator extends JDialog {
 		this.population = new OnlineCommunityPopulation(populationDir, 
 				populationName + ".xml");
 		
-		this.populationName = population.getName();
+		populationName = population.getName();
 		this.numModerates = String.valueOf(population.getNumUsers(UserType.Moderate));
 		this.numSpammers = String.valueOf(population.getNumUsers(UserType.Spammer));
 		this.numPornographics = String.valueOf(population.getNumUsers(UserType.Pornographic));
@@ -257,7 +277,7 @@ public class DialogPopulationConfigurator extends JDialog {
 			throws NumberFormatException, Exception {
 
 		/* Save population attributes */
-		this.population.setName(this.populationName);
+		this.population.setName(populationName);
 		this.population.setNumUsers(UserType.Moderate, Integer.valueOf(this.numModerates));
 		this.population.setNumUsers(UserType.Spammer, Integer.valueOf(this.numSpammers));
 		this.population.setNumUsers(UserType.Pornographic, Integer.valueOf(this.numPornographics));
@@ -303,6 +323,8 @@ public class DialogPopulationConfigurator extends JDialog {
 
 		/* Finally save population to XML */
 		this.population.saveToXML(availablePopsDir, population.getName() + ".xml");
+		
+		this.userSaved = true;
 	}
 
 	/**
@@ -469,7 +491,7 @@ public class DialogPopulationConfigurator extends JDialog {
 	//------------------------------------------------------------------------------
 
 	private void txtNamePopActionPerformed(DocumentEvent e) {
-		this.populationName = this.txtNamePop.getText();
+		populationName = this.txtNamePop.getText();
 	}                                          
 
 	private void txtNumModeratesActionPerformed(DocumentEvent e) {
@@ -574,26 +596,26 @@ public class DialogPopulationConfigurator extends JDialog {
 		lblUserProfiles = new JLabel();
 		panelUserProfile = new JPanel();
 		panelUploadProfile = new JPanel();
-		txtUploadSpam = new JTextField();
-		txtUploadPorn = new JTextField();
-		txtUploadViolent = new JTextField();
+		txtUploadSpam = new JDecimalField(2);
+		txtUploadPorn = new JDecimalField(2);
+		txtUploadViolent = new JDecimalField(2);
 		lblUploadFreq = new JLabel();
-		txtUploadInsult = new JTextField();
+		txtUploadInsult = new JDecimalField(2);
 		lblUploadCorrect = new JLabel();
 		lblUploadSpam = new JLabel();
 		lblUploadPorn = new JLabel();
 		lblUploadViolent = new JLabel();
 		lblUploadInsult = new JLabel();
-		txtUploadFreq = new JTextField();
-		txtUploadCorrect = new JTextField();
+		txtUploadFreq = new JDecimalField(2);
+		txtUploadCorrect = new JDecimalField(2);
 		sepUploadProfile = new JSeparator();
 		panelViewProfile = new JPanel();
 		lblTheReporter = new JLabel();
 		lblMultimedia = new JLabel();
 		lblForum = new JLabel();
-		txtViewTheReporter = new JTextField();
-		txtViewMultimedia = new JTextField();
-		txtViewForum = new JTextField();
+		txtViewTheReporter = new JDecimalField(2);
+		txtViewMultimedia = new JDecimalField(2);
+		txtViewForum = new JDecimalField(2);
 		lblViewCriterion = new JLabel();
 		rbNewest = new JRadioButton();
 		rbMostViewed = new JRadioButton();
@@ -601,21 +623,21 @@ public class DialogPopulationConfigurator extends JDialog {
 		panelComplainProfile = new JPanel();
 		lblProbComplain = new JLabel();
 		lblComplainSpam = new JLabel();
-		txtComplainSpam = new JTextField();
-		txtComplainPorn = new JTextField();
-		txtComplainViolent = new JTextField();
-		txtComplainInsult = new JTextField();
+		txtComplainSpam = new JDecimalField(2);
+		txtComplainPorn = new JDecimalField(2);
+		txtComplainViolent = new JDecimalField(2);
+		txtComplainInsult = new JDecimalField(2);
 		lblComplainPorn = new JLabel();
 		lblComplainViolent = new JLabel();
 		lblComplainInsult = new JLabel();
 		cbUserProfiles = new JComboBox<String>();
 		panelNumAgents = new JPanel();
-		txtNumModerates = new JTextField();
-		txtNumSpammers = new JTextField();
-		txtNumPornographics = new JTextField();
-		txtNumViolent = new JTextField();
+		txtNumModerates = new JIntegerField(0);
+		txtNumSpammers = new JIntegerField(0);
+		txtNumPornographics = new JIntegerField(0);
+		txtNumViolent = new JIntegerField(0);
 		lblNumSpammers = new JLabel();
-		txtNumRudes = new JTextField();
+		txtNumRudes = new JIntegerField(0);
 		lblNumModerates = new JLabel();
 		lblNumPornographics = new JLabel();
 		lblNumViolent = new JLabel();
@@ -1144,7 +1166,8 @@ public class DialogPopulationConfigurator extends JDialog {
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				DialogPopulationConfigurator dialog = new DialogPopulationConfigurator(new JFrame(), true);
+				DialogPopulationConfigurator dialog = new DialogPopulationConfigurator(new JFrame(), 
+						true, populationName);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 					@Override
 					public void windowClosing(java.awt.event.WindowEvent e) {
@@ -1528,24 +1551,24 @@ public class DialogPopulationConfigurator extends JDialog {
 	private JRadioButton rbRandom;
 	private JSeparator sepUploadProfile;
 	private JSeparator sepUserProfile;
-	private JTextField txtComplainInsult;
-	private JTextField txtComplainPorn;
-	private JTextField txtComplainSpam;
-	private JTextField txtComplainViolent;
+	private JDecimalField txtComplainInsult;
+	private JDecimalField txtComplainPorn;
+	private JDecimalField txtComplainSpam;
+	private JDecimalField txtComplainViolent;
 	private JTextField txtNamePop;
-	private JTextField txtNumModerates;
-	private JTextField txtNumPornographics;
-	private JTextField txtNumRudes;
-	private JTextField txtNumSpammers;
-	private JTextField txtNumViolent;
-	private JTextField txtUploadCorrect;
-	private JTextField txtUploadFreq;
-	private JTextField txtUploadInsult;
-	private JTextField txtUploadPorn;
-	private JTextField txtUploadSpam;
-	private JTextField txtUploadViolent;
-	private JTextField txtViewForum;
-	private JTextField txtViewMultimedia;
-	private JTextField txtViewTheReporter;
+	private JIntegerField txtNumModerates;
+	private JIntegerField txtNumPornographics;
+	private JIntegerField txtNumRudes;
+	private JIntegerField txtNumSpammers;
+	private JIntegerField txtNumViolent;
+	private JDecimalField txtUploadCorrect;
+	private JDecimalField txtUploadFreq;
+	private JDecimalField txtUploadInsult;
+	private JDecimalField txtUploadPorn;
+	private JDecimalField txtUploadSpam;
+	private JDecimalField txtUploadViolent;
+	private JDecimalField txtViewForum;
+	private JDecimalField txtViewMultimedia;
+	private JDecimalField txtViewTheReporter;
 	// End of variables declaration//GEN-END:variables
 }

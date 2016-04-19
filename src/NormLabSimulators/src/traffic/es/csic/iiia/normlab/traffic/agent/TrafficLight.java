@@ -16,7 +16,7 @@ public class TrafficLight implements TrafficElement {
 	 */
 	private static final int RED_DURATION = 32;
 	private static final int GREEN_DURATION = 28;
-	private static int ID_COUNTER = 0;
+//	private static int ID_COUNTER = 0;
 	
 	/**
 	 * 
@@ -27,8 +27,8 @@ public class TrafficLight implements TrafficElement {
 	 * 
 	 */
 	private Color color;
-	private int id, counter;
-	private int turn, duration;
+	private int counter;
+	private int turn;
 	private Direction heading;
 	private boolean active;
 
@@ -41,7 +41,7 @@ public class TrafficLight implements TrafficElement {
 		this.x = x;
 		this.y = y;
 		this.heading = heading;
-		this.id = ++ID_COUNTER;
+//		this.id = ++ID_COUNTER;
 		this.turn = turn;
 		this.active = active;
 		
@@ -156,8 +156,5 @@ public class TrafficLight implements TrafficElement {
   }
 
 	@Override
-  public void move() {
-	  // TODO Auto-generated method stub
-	  
-  }
+  public void move() {}
 }

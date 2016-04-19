@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><configuration>
     <parameter defaultValue="MyExperiment" name="name"/>
 <parameter defaultValue="TrafficJunction" name="simulator"/>
-<parameter defaultValue="3" name="strategy"/>
+<parameter defaultValue="2" name="strategy"/>
 <parameter defaultValue="10" name="simulations"/>
 <parameter defaultValue="false" name="computeAvgs"/>
 <parameter defaultValue="false" name="computeMeans"/>

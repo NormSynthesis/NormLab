@@ -203,8 +203,7 @@ public class NormSynergiesDetector {
 		Utility utility = this.normGroupNetwork.getUtility(normGroup);
 		Goal goal = normGroup.getGoal();
 		
-		double satDegree = this.nsmSettings.getNormDeactivationBoundary(dim, goal);
-		double epsilon = this.nsmSettings.getNormDeactivationBoundaryEpsilon(dim, goal);
+		double threshold = this.nsmSettings.getNormDeactivationThreshold(dim, goal);
 		double avg = utility.getPerformanceRange(dim, goal).getCurrentAverage();
 
 		int minNumEvalsToClassify = this.nsmSettings.getMinEvaluationsToClassifyNorms();
@@ -212,7 +211,7 @@ public class NormSynergiesDetector {
 
 		/* The norm under performs */
 		if(numValues > minNumEvalsToClassify) {
-			if(avg <= Math.max(0, (satDegree - epsilon))) {
+			if(avg <= Math.max(0, threshold)) {
 				return true;
 			}
 		}

@@ -96,7 +96,7 @@ public class CarContextFactory {
 					}						
 				}
 				
-				/* Agent's context out of bounds */
+				/* Agent's context is out of bounds */
 				else {
 					return null;
 				}

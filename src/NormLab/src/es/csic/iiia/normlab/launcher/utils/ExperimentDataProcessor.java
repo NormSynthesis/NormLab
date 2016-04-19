@@ -38,12 +38,12 @@ public class ExperimentDataProcessor {
 	public File computeAverages(String path, final String filePattern) 
 			throws IOException {
 
-		/* Create average file and readers and writer for data files */
-		File avgFile = this.loadAvgFile(path, filePattern);
-
 		/* Retrieve data files with the specified pattern */
 		File[] dataFiles = this.retrieveFiles(path, filePattern);
 
+		/* Create average file and readers and writer for data files */
+		File avgFile = this.loadAvgFile(path, filePattern);
+		
 		/* Process each retrieved file by adding its values to the average */
 		int numProcessedFiles = 0;
 		for(File dataFile : dataFiles) {
@@ -102,6 +102,7 @@ public class ExperimentDataProcessor {
 
 			/* If line exists, update it (avoiding header, i.e., line 0) */
 			else if(line > 0) {
+				
 				if(operation == Operation.Average) {
 					avgLine = avgBody.get(line);
 					String[] newAvgLine = this.addAverage(numProcessedFiles, 
@@ -136,9 +137,9 @@ public class ExperimentDataProcessor {
 				double dataNum = Double.valueOf(dataLine[i]);
 				double avgNum = Double.valueOf(avgLine[i]);
 				
-				double newAvgNum = ((numProcessedFiles-1) * dataNum + avgNum) / 
+				double newAvgNum = ((numProcessedFiles-1) * avgNum + dataNum) / 
 						numProcessedFiles;
-				newAvgNum = Math.floor(newAvgNum * 100) / 100;
+//				newAvgNum = Math.floor(newAvgNum * 100) / 100;
 				newAvgLine[i] = String.valueOf(newAvgNum);
 			}
 		}

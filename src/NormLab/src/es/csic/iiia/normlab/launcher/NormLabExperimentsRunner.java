@@ -11,8 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-
 import es.csic.iiia.normlab.launcher.model.RepastRunner;
 import es.csic.iiia.normlab.launcher.model.RepastXMLManager;
 import es.csic.iiia.normlab.launcher.utils.ExperimentDataProcessor;
@@ -39,6 +37,8 @@ public class NormLabExperimentsRunner implements Runnable {
 	private String performedExpDir = "experiments/performed/";
 	private String tempExpDir = "experiments/.tmp/";
 	private String outputDataDir = "output/";
+	private String trafficDataFileNamePattern = "TrafficDataOutput.dat";
+	private String onlineCommDataFileNamePattern = "OnlineCommDataOutput.dat";
 	
 	private String expOutputDir;
 	private String expOutputLogsDir;
@@ -195,7 +195,8 @@ public class NormLabExperimentsRunner implements Runnable {
 			
 			File backupExpFolder = new File(expOutputFolder.getPath() + 
 					"-backup-" + dateFormat.format(date));
-			FileUtils.moveDirectory(expOutputFolder, backupExpFolder);
+//			FileUtils.moveDirectory(expOutputFolder, backupExpFolder);
+			expOutputFolder.renameTo(backupExpFolder);
 		}  
   }
 
@@ -247,11 +248,27 @@ public class NormLabExperimentsRunner implements Runnable {
 	
 
 	/**
+	 * @throws IOException 
 	 * 
 	 */
-	private void postProcessExperiments() {
+	private void postProcessExperiments() throws IOException {
+		String filename = "";
+		
+		if(simulator.equals("TrafficJunction")) {
+			filename = trafficDataFileNamePattern;
+		}
+		else if(simulator.equals("OnlineCommunity")) {
+			filename = onlineCommDataFileNamePattern;
+		}
+		
 		if(this.computeAvgs) {
-			
+			this.expDataProcessor.computeAverages(expOutputDataDir, 
+					filename);
+		}
+		
+		if(this.computeMeans) {
+//			this.expDataProcessor.computeMeans(expOutputDataDir, 
+//					dataFileNamePattern);
 		}
 	}
 	
@@ -282,7 +299,7 @@ public class NormLabExperimentsRunner implements Runnable {
 
 		repastArgs = new String[3];
 		repastArgs[0] = "-params";
-		repastArgs[1] = batchParamsFile.getPath();
+		repastArgs[1] = batchParamsFile.getAbsolutePath();
 		repastArgs[2] = scenarioDir;
 	}
 }

@@ -44,10 +44,10 @@ public class PerformanceRangeChartSeries extends XYSeries {
 //	private Dimension dim;
 //	private Goal goal;
 
-	private double alphaSpec;
-	private double alphaSpecTopBand;
-	private double alphaSpecBottomBand;
-	private double alphaGen;
+//	private double alphaSpec;
+	private double actThreshold;
+	private double deactThreshold;
+	private double genThreshold;
 	private int x;
 
 	//---------------------------------------------------------------------------
@@ -74,12 +74,10 @@ public class PerformanceRangeChartSeries extends XYSeries {
 		this.x = 0;
 		
 		NormSynthesisSettings nsmSettings = nsm.getNormSynthesisSettings();
-		this.alphaSpec = nsmSettings.getNormDeactivationBoundary(dim, goal);
-		this.alphaGen = nsmSettings.getNormGeneralisationBoundary(dim, goal);
-		this.alphaSpecTopBand = alphaSpec +
-				nsmSettings.getNormDeactivationBoundaryEpsilon(dim, goal);
-		this.alphaSpecBottomBand = alphaSpec -
-				nsmSettings.getNormDeactivationBoundaryEpsilon(dim, goal);
+//		this.alphaSpec = nsmSettings.getNormDeactivationBoundary(dim, goal);
+		this.genThreshold = nsmSettings.getNormGeneralisationThreshold(dim, goal);
+		this.actThreshold = nsmSettings.getNormActivationThreshold(dim, goal);
+		this.deactThreshold = nsmSettings.getNormDeactivationThreshold(dim, goal);
 		
 		this.initValues();
 	}
@@ -125,17 +123,17 @@ public class PerformanceRangeChartSeries extends XYSeries {
 		else if(this.type == UtilityChartSeriesType.BottomBoundary) {
 			num = perfRange.getSlidingBottomBoundary().get(valueIndex);
 		}
-		else if(this.type == UtilityChartSeriesType.AlphaSpec)	{
-			num = alphaSpec;
+//		else if(this.type == UtilityChartSeriesType.AlphaSpec)	{
+//			num = alphaSpec;
+//		}
+		else if(this.type == UtilityChartSeriesType.ActThreshold)	{
+			num = actThreshold;
 		}
-		else if(this.type == UtilityChartSeriesType.AlphaSpecTopBand)	{
-			num = alphaSpecTopBand;
-		}
-		else if(this.type == UtilityChartSeriesType.AlphaSpecBottomBand)	{
-			num = alphaSpecBottomBand;
+		else if(this.type == UtilityChartSeriesType.DeactThreshold)	{
+			num = deactThreshold;
 		}
 		else if(this.type == UtilityChartSeriesType.AlphaGen)	{
-			num = alphaGen; 
+			num = genThreshold; 
 		}
 
 		// Add value to the series
@@ -171,9 +169,9 @@ public class PerformanceRangeChartSeries extends XYSeries {
 		Average,
 		TopBoundary,
 		BottomBoundary,
-		AlphaSpec,
-		AlphaSpecTopBand,
-		AlphaSpecBottomBand,
+//		AlphaSpec,
+		ActThreshold,
+		DeactThreshold,
 		AlphaGen;
 	}
 }

@@ -42,7 +42,7 @@ public class DialogNormLabExamples extends JDialog {
 	private JPanel panelEx3;
 	private JPanel panelEx4;
 	private JPanel panelEx5;
-	
+
 	/* */
 	private int option;
 
@@ -413,31 +413,31 @@ public class DialogNormLabExamples extends JDialog {
 			}
 		});
 
-		GroupLayout layout = new GroupLayout(getContentPane());
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(
-				layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
 						.addContainerGap()
-						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-								.addComponent(panelEx3, GroupLayout.Alignment.TRAILING, 
-										GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, 
-										Short.MAX_VALUE)
-										.addComponent(lblTitle, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(panelEx1, GroupLayout.DEFAULT_SIZE, 
-														GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-														.addComponent(panelEx2, GroupLayout.Alignment.TRAILING,
-																GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																.addComponent(panelEx4, GroupLayout.DEFAULT_SIZE, 
-																		GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																		.addComponent(panelEx5, GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																				.addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-																						.addGap(0, 0, Short.MAX_VALUE)
-																						.addComponent(btnExit, GroupLayout.PREFERRED_SIZE, 110,
-																								GroupLayout.PREFERRED_SIZE)))
-																								.addContainerGap())
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addComponent(panelEx3, javax.swing.GroupLayout.Alignment.TRAILING, 
+										javax.swing.GroupLayout.DEFAULT_SIZE, 
+										javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE,
+												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+												.addComponent(panelEx1, javax.swing.GroupLayout.DEFAULT_SIZE, 
+														javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(panelEx2, javax.swing.GroupLayout.Alignment.TRAILING,
+																javax.swing.GroupLayout.DEFAULT_SIZE, 
+																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+																.addComponent(panelEx4, javax.swing.GroupLayout.DEFAULT_SIZE,
+																		javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+																		.addComponent(panelEx5, javax.swing.GroupLayout.DEFAULT_SIZE, 
+																				javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+																				.addGroup(layout.createSequentialGroup()
+																						.addComponent(btnExit)
+																						.addGap(0, 0, Short.MAX_VALUE)))
+																						.addContainerGap())
 				);
 		layout.setVerticalGroup(
 				layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -447,21 +447,21 @@ public class DialogNormLabExamples extends JDialog {
 						.addGap(18, 18, 18)
 						.addComponent(panelEx1, GroupLayout.PREFERRED_SIZE, 
 								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addComponent(panelEx2, GroupLayout.PREFERRED_SIZE, 
-								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addComponent(panelEx3, GroupLayout.PREFERRED_SIZE, 
-								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addComponent(panelEx4, GroupLayout.PREFERRED_SIZE,
-								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						.addComponent(panelEx5, GroupLayout.PREFERRED_SIZE, 
-								GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(btnExit)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+								.addComponent(panelEx2, GroupLayout.PREFERRED_SIZE, 
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+										.addComponent(panelEx3, GroupLayout.PREFERRED_SIZE, 
+												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+												.addComponent(panelEx4, GroupLayout.PREFERRED_SIZE,
+														GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+														.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+														.addComponent(panelEx5, GroupLayout.PREFERRED_SIZE, 
+																GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+																.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+																.addComponent(btnExit)
+																.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 				);
 
 		pack();

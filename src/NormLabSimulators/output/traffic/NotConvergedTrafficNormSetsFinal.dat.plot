@@ -1,9 +1,0 @@
-NormSet TimesAppearing
-1 25
-2 1
-3 1
-4 1
-5 3
-6 3
-7 1
-8 33

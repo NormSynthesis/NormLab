@@ -219,13 +219,13 @@ public class NormSynthesisNetwork<T> {
 		}
 	}
 
-	/**
-	 * 
-	 * @param utility
-	 */
-	public void setNormsDefaultUtility(float utility) {
-		this.normsDefaultUtility = utility;
-	}
+//	/**
+//	 * 
+//	 * @param utility
+//	 */
+//	public void setNormsDefaultUtility(float utility) {
+//		this.normsDefaultUtility = utility;
+//	}
 	
 	/**
 	 * Returns <tt>true</tt> if the network contains the node

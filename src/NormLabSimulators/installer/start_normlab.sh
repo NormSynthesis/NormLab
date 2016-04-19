@@ -37,6 +37,8 @@ CP=$CP:$REPAST_SIMPHONY_BATCH_ROOT/bin
 CP=$CP:$NORMLAB_LIB/normlab-1.0.jar
 CP=$CP:$NORMLAB_LIB/BrowserLauncher2-all-1_3.jar
 CP=$CP:$NORMLAB_LIB/commons-io-2.4.jar
+CP=$CP:$NORMLAB_LIB/opencsv-3.7.jar
+CP=$CP:$NORMLAB_LIB/commons-lang3-3.4.jar
 
 CP=$CP:$NSM_ROOT/bin
 CP=$CP:$NSM_LIB/collections-generic-4.01.jar

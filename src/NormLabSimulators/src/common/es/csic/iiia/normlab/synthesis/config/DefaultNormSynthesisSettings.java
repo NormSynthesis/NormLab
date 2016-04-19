@@ -69,23 +69,25 @@ public abstract class DefaultNormSynthesisSettings implements NormSynthesisSetti
 	/* Number of ticks of stability to converge */
 	private long numTicksToConverge;
 
-	/* */
-	private double normEffDeactThresholdEpsilon;
-	
-	/* */
-	private double normNecDeactThresholdEpsilon;
-
-	/* */
+	/* Minimum number of norm evaluations to classify them */
 	private int normsMinEvalsToDecide;
 
-	/* */
+	/* Minimum number of evaluations in norm groups to classify them */
 	private int normGroupsMinEvalsToDecide;
 
-	/* */
-	private String userStrategyName;
+	/* Canonical name of the user's norm synthesis strategy */
+	private String userStrategyCanonicalName;
 
-	/* */
+	/* Approach employed to generate norms (reactive/deliberative) */
 	private NormGenerator.Approach normGenerationApproach;
+
+	/* Threshold above which norms are considered as effective enough
+	 * to be part of the normative system */
+	private Double normEffActThreshold;
+
+	/* Threshold above which norms are considered as necessary enough
+	 * to be part of the normative system */
+	private Double normNecActThreshold;
 
 	//-----------------------------------------------------------------
 	// Methods
@@ -105,7 +107,7 @@ public abstract class DefaultNormSynthesisSettings implements NormSynthesisSetti
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		
 		/* General settings  */
-		
+
 		this.nsExample = (Integer)p.getValue("normSynthesisExample");
 		int strategy = (Integer)p.getValue("normSynthesisStrategy");
 		
@@ -174,22 +176,13 @@ public abstract class DefaultNormSynthesisSettings implements NormSynthesisSetti
 
 		this.normEffDeactThreshold = (Double)p.getValue("normEffDeactThreshold");
 		this.normNecDeactThreshold = (Double)p.getValue("normNecDeactThreshold");
-		this.normEffDeactThresholdEpsilon = (Double)p.getValue("normEffDeactThresholdEpsilon");
-		this.normNecDeactThresholdEpsilon = (Double)p.getValue("normNecDeactThresholdEpsilon");
+		this.normEffActThreshold = (Double)p.getValue("normEffActThreshold");
+		this.normNecActThreshold = (Double)p.getValue("normNecActThreshold");
 		this.normsMinEvalsToDecide = (Integer)p.getValue("normsMinEvaluationsToDecide");
 		this.normGroupsMinEvalsToDecide = (Integer)p.getValue("normGroupsMinEvaluationsToDecide");
 		
-		/* For LION on, set default utility in a different manner... */
-		switch(this.synthesisStrategy) {
-		case LION:
-		case DESMON:
-			this.normsDefaultUtility = 0f;
-			break;
-		default:
-		}
-		
-		/* Get user strategy name */
-		this.userStrategyName = (String)p.getValue("userStrategyName");
+		/* Get user strategy canonical name */
+		this.userStrategyCanonicalName = (String)p.getValue("userStrategyCanonicalName");
 	}
 
 	/**
@@ -228,7 +221,7 @@ public abstract class DefaultNormSynthesisSettings implements NormSynthesisSetti
 	 * 
 	 */
 	@Override
-	public double getNormGeneralisationBoundary(EvaluationCriteria dim, Goal goal) {
+	public double getNormGeneralisationThreshold(EvaluationCriteria dim, Goal goal) {
 		if(dim == EvaluationCriteria.Effectiveness) {
 			return this.normEffGenThreshold;
 		}
@@ -242,7 +235,7 @@ public abstract class DefaultNormSynthesisSettings implements NormSynthesisSetti
 	 * 
 	 */
 	@Override
-	public double getNormDeactivationBoundary(EvaluationCriteria dim, Goal goal) {
+	public double getNormDeactivationThreshold(EvaluationCriteria dim, Goal goal) {
 		if(dim == EvaluationCriteria.Effectiveness) {
 			return this.normEffDeactThreshold;
 		}
@@ -255,16 +248,17 @@ public abstract class DefaultNormSynthesisSettings implements NormSynthesisSetti
 	/**
 	 * 
 	 */
-	public double getNormDeactivationBoundaryEpsilon(EvaluationCriteria dim, Goal goal) {
+	@Override
+	public double getNormActivationThreshold(EvaluationCriteria dim, Goal goal) {
 		if(dim == EvaluationCriteria.Effectiveness) {
-			return this.normEffDeactThresholdEpsilon;
+			return this.normEffActThreshold;
 		}
 		else if(dim == EvaluationCriteria.Necessity) {
-			return this.normNecDeactThresholdEpsilon;
+			return this.normNecActThreshold;
 		}
 		return 0;
 	}
-
+	
 	/**
 	 * 
 	 */
@@ -412,7 +406,7 @@ public abstract class DefaultNormSynthesisSettings implements NormSynthesisSetti
 
 	@Override
   public String getUserStrategy() {
-		return this.userStrategyName;
+		return this.userStrategyCanonicalName;
   }
 
 	@Override

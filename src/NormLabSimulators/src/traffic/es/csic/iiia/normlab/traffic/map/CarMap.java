@@ -560,6 +560,7 @@ public class CarMap extends TrafficMatrix {
 	 * @param p
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private boolean isFree(GridPoint p)
 	{
 		int count = 0;

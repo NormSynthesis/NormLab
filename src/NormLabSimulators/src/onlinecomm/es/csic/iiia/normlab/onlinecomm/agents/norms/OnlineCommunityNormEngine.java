@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.csic.iiia.normlab.onlinecomm.content.IContent;
-import es.csic.iiia.normlab.onlinecomm.nsm.OnlineCommunityNSAgent;
 import es.csic.iiia.normlab.onlinecomm.nsm.perception.CommunityView;
 import es.csic.iiia.nsm.agent.EnvironmentAgentContext;
 import es.csic.iiia.nsm.agent.language.PredicatesDomains;

@@ -231,6 +231,7 @@ public class SlidingWindowMetric {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	public int getNumvalues() {
 		int c = 0;
 		for(Float f : queue) {

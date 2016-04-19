@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><parameters>
 
+	<!-- ================== -->
 	<!-- SIMULATOR SETTINGS -->
+	<!-- ================== -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="MyPopulatio2" displayName="Population to use" isReadOnly="false" name="population" type="string"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="7moderates-3spammers" displayName="Population to use" isReadOnly="false" name="population" type="string"/>
 	
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="Default Random Seed" isReadOnly="false" name="randomSeed" type="int"/>
 
@@ -10,7 +12,7 @@
 	
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" defaultValue="true" displayName="Sim: Use GUI" isReadOnly="false" name="useGui" type="boolean"/>
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.3" displayName="Sim: Norm violation rate" isReadOnly="false" name="normInfringementRate" type="double"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.30" displayName="Sim: Norm violation rate" isReadOnly="false" name="normInfringementRate" type="double"/>
 	
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="output/onlinecomm" displayName="Output data path" isReadOnly="false" name="outputDataPath" type="string"/>
 				
@@ -27,30 +29,27 @@
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$LongConverter" defaultValue="3000" displayName="Contents queue size" isReadOnly="false" name="contentQueueSize" type="long"/>
 
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" defaultValue="true" displayName="Norms have user id?" isReadOnly="false" name="normsHaveUserId" type="boolean"/>
-					
-	<!-- NORM SYNTHESIS SETTINGS -->
+	
 	
 	<!-- ======================= -->			
 	<!-- NORM SYNTHESIS SETTINGS -->
 	<!-- ======================= -->
-	
-	
+		
 										<!-- GENERAL SETTINGS -->
 										
-										
 	<!-- Strategy employed by the NSM to perform norm synthesis 
-		-1 = Example
-		 0 = Custom
-		 1 = Generic
-		 2 = BASE
-		 3 = IRON
-		 4 = SIMON
-		 5 = LION
-		 6 = DESMON) -->
+		 0 = Example
+		 1 = Self-made
+		 2 = Custom
+		 3 = BASE
+		 4 = IRON
+		 5 = SIMON
+		 6 = LION
+		 7 = DESMON) -->
 		 
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="3" displayName="NSM: Norm synthesis strategy" isReadOnly="false" name="normSynthesisStrategy" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="7" displayName="NSM: Norm synthesis strategy" isReadOnly="false" name="normSynthesisStrategy" type="int"/>
 	
-	<!-- Norm synthesis example 
+	<!-- Norm synthesis example (only for traffic)
 		1 = No norms rule the MAS. No norm synthesis. 
 		2 = A predefined normative system rules the MAS.
 		3 = A predefined normative system rules the MAS.
@@ -71,6 +70,7 @@
 	
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$LongConverter" defaultValue="1000" displayName="NSM: Num. ticks to converge" isReadOnly="false" name="numTicksToConverge" type="long"/>
 	
+	
 									<!-- NORM EVALUATION SETTINGS -->
 									
 		
@@ -90,7 +90,7 @@
 				
 	<!-- Size of the moving average to compute norms' cumulative performances -->
 					
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="50" displayName="NSM: Norms performance range size" isReadOnly="false" name="normsPerfRangeSize" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="75" displayName="NSM: Norms performance range size" isReadOnly="false" name="normsPerfRangeSize" type="int"/>
 	
 	
 									<!-- NORM GENERALISATION SETTINGS -->
@@ -122,30 +122,40 @@
 				
 								
 								<!-- NORM ACTIVATION/DEACTIVATION SETTINGS -->
-								
+
+
+	<!-- The approach employed to decide when to activate created norms
+		0 = Reactive activation. Norms are activated right after being created.
+		1 = Deliberative activation. Norms are activated when there is enough evidence to consider them as necessary -->
+		
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="1" displayName="NSM: Norm activation approach" isReadOnly="false" name="normGenerationApproach" type="int"/>
 
 	<!-- Minimum amount of evaluations required to decide if norms are effective and necessary -->
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="20" displayName="NSM: Norms min. evaluations classify" isReadOnly="false" name="normsMinEvaluationsToDecide" type="int"/>
+	
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="25" displayName="NSM: Norms min. evaluations classify" isReadOnly="false" name="normsMinEvaluationsToDecide" type="int"/>
 				
+	<!-- Threshold above which norms are considered to be effective enough to be part of the normative system -->
+	
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.3" displayName="NSM: Norm act. eff. threshold" isReadOnly="false" name="normEffActThreshold" type="double"/>
+	
+	<!-- Threshold above which norms are considered to be necessary enough to be part of the normative system -->
+	
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.3" displayName="NSM: Norm act. nec. threshold" isReadOnly="false" name="normNecActThreshold" type="double"/>
+	
 	<!-- Threshold below which norms are considered not to be effective enough to be part of the normative system -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.05" displayName="NSM: Norm spec. eff. threshold" isReadOnly="false" name="normEffDeactThreshold" type="double"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.3" displayName="NSM: Norm deact. eff. threshold" isReadOnly="false" name="normEffDeactThreshold" type="double"/>
 	
 	<!-- Threshold below which norms are considered not to be necessary enough to be part of the normative system -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.05" displayName="NSM: Norm spec. nec. threshold" isReadOnly="false" name="normNecDeactThreshold" type="double"/>
-	
-	<!-- Epsilon to compute the interval of values below which norms are considered not to be effective enough to be part of the normative system -->
-	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.025" displayName="NSM: Spec. threshold epsilon" isReadOnly="false" name="normEffDeactThresholdEpsilon" type="double"/>
-	
-	<!-- Epsilon to compute the interval of values below which norms are considered not to be necessary enough to be part of the normative system -->
-	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.025" displayName="NSM: Spec. threshold epsilon" isReadOnly="false" name="normNecDeactThresholdEpsilon" type="double"/>
-
-	
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.3" displayName="NSM: Norm deact. nec. threshold" isReadOnly="false" name="normNecDeactThreshold" type="double"/>
+		
 	<!-- Minimum amount of evaluations required to decide if norm groups are effective -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="NSM: Norm groups min. evaluations classify" isReadOnly="false" name="normGroupsMinEvaluationsToDecide" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="1" displayName="NSM: Norm groups min. evaluations classify" isReadOnly="false" name="normGroupsMinEvaluationsToDecide" type="int"/>
+
+	<!-- Name of the user's self-made norm synthesis strategy -->
+	
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="user.strategies.CustomStrategy2" displayName="Self-made strategy name" isReadOnly="false" name="userStrategyCanonicalName" type="string"/>
 	
 </parameters>

@@ -9,6 +9,8 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -20,6 +22,7 @@ import javax.swing.filechooser.FileSystemView;
 import es.csic.iiia.normlab.launcher.model.NormLabExperimentsManager;
 import es.csic.iiia.normlab.launcher.model.RepastXMLManager;
 import es.csic.iiia.normlab.launcher.ui.NormLabFrame.NormLabSimulator;
+import es.csic.iiia.normlab.launcher.utils.JIntegerField;
 import es.csic.iiia.normlab.launcher.utils.SingleRootFileSystemView;
 
 /**
@@ -168,6 +171,9 @@ public class DialogExperimentCreator extends javax.swing.JDialog {
 		
 		RepastXMLManager expConfigManager = 
 				this.expManager.getExperimentConfigManager();
+		
+		NumberFormat format = NumberFormat.getInstance(Locale.US);
+		numSims = format.parse(numSims).toString();
 		
 		/* Add simulator's parameters configuration */
 		expConfigManager.addAttribute("name", name);
@@ -342,7 +348,7 @@ public class DialogExperimentCreator extends javax.swing.JDialog {
 				this.strategy = 1;
 				
 				paramsManager.setAttribute("normSynthesisStrategy", String.valueOf(strategy));
-				paramsManager.setAttribute("userStrategyName", className);
+				paramsManager.setAttribute("userStrategyCanonicalName", className);
 			}
 
 			/* Exception. Show error message */
@@ -586,7 +592,7 @@ public class DialogExperimentCreator extends javax.swing.JDialog {
 		rbTrafficSim = new javax.swing.JRadioButton();
 		btnSave = new javax.swing.JButton();
 		panelConfigure = new javax.swing.JPanel();
-		txtNumSimulations = new javax.swing.JTextField();
+		txtNumSimulations = new JIntegerField(1);
 		lblNumSimulations = new javax.swing.JLabel();
 		cbCompAvg = new javax.swing.JCheckBox();
 		cbGenCharts = new javax.swing.JCheckBox();
@@ -864,13 +870,15 @@ public class DialogExperimentCreator extends javax.swing.JDialog {
 				cbGenChartsActionPerformed(evt);
 			}
 		});
-
+		cbGenCharts.setEnabled(false);
+		
 		cbCompMeans.setText("Compute means");
 		cbCompMeans.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				cbCompMeansActionPerformed(evt);
 			}
 		});
+		cbCompMeans.setEnabled(false);
 
 		javax.swing.GroupLayout panelConfigureLayout = new javax.swing.GroupLayout(panelConfigure);
 		panelConfigure.setLayout(panelConfigureLayout);
@@ -1044,6 +1052,6 @@ public class DialogExperimentCreator extends javax.swing.JDialog {
 	private javax.swing.JRadioButton rbSIMONStrategy;
 	private javax.swing.JRadioButton rbTrafficSim;
 	private javax.swing.JTextField txtExperimentName;
-	private javax.swing.JTextField txtNumSimulations;
+	private JIntegerField txtNumSimulations;
 	// End of variables declaration//GEN-END:variables
 }

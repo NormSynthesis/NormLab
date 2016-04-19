@@ -98,13 +98,13 @@ public class OnlineCommunityUser implements EnvironmentAgent {
 			Grid<Object> grid, int posAgentRow, UploadProfile upLoadProfile,	
 			ViewProfile viewProfile, ComplaintProfile complaintProfile,
 			OnlineCommunityNormEngine normEngine, 
-			OnlineCommunityFactFactory factFactory) {
+			OnlineCommunityFactFactory factFactory, int numViewsPerTick) {
 
 		this.reasoner = reasoner;
 		this.normEngine = normEngine;
 		this.space = space;
 		this.grid = grid;
-		
+
 		this.posAgentRow = posAgentRow;
 		this.upLoadProfile = upLoadProfile;
 		this.viewProfile = viewProfile;
@@ -155,7 +155,7 @@ public class OnlineCommunityUser implements EnvironmentAgent {
 	 * Method to generate content to upload and put this in the context
 	 */
 	public void upLoadContent(){
-		//System.out.println("step upload content");
+		//		System.out.println("step upload content");
 
 		ContextData contextData = (ContextData) grid.getObjectAt(0,0);
 
@@ -166,7 +166,7 @@ public class OnlineCommunityUser implements EnvironmentAgent {
 			IContent content = upLoadProfile.getFirstListUploadProfile();
 
 			if(content != null) {
-				
+
 				// 1. Perceive: Update agent context (for IRON)
 				section = content.getSection();
 				agentContext.update(content);
@@ -310,23 +310,27 @@ public class OnlineCommunityUser implements EnvironmentAgent {
 	 */
 	public void viewAndComplaintContent() {
 
-		//Erase the actual view and complaint lists if the actualAgent is the first one.
-		List<IContent> actualViewList = contextData.getActualViewList();
+		/* To force much more views than uploads. NEVER remove this */
+		
+		for(int i=0; i<20; i++) {
+			//Erase the actual view and complaint lists if the actualAgent is the first one.
+			List<IContent> actualViewList = contextData.getActualViewList();
 
-		//1.- View some upload content
-		IContent content = viewContent();
+			//1.- View some upload content
+			IContent content = viewContent();
 
-		//1.1.- Update the actual view list.
-		if(content != null){ // May be that the agent doesn't view anything...
-			actualViewList.add(content);
+			//1.1.- Update the actual view list.
+			if(content != null){ // May be that the agent doesn't view anything...
+				actualViewList.add(content);
 
-			//2.- Complaint or not about the content visited
-			boolean complaintDone = complaintContent(content);
-			boolean normViolated = (content.getViolatedNorm() != null);
-			boolean contentIsNotRegulated = !isContentRegulated(content);
+				//2.- Complaint or not about the content visited
+				boolean complaintDone = complaintContent(content);
+				boolean normViolated = (content.getViolatedNorm() != null);
+				boolean contentIsNotRegulated = !isContentRegulated(content);
 
-			//3.- Update the graphic values if a complaint is done.
-			updateGraphicValues(complaintDone, normViolated, contentIsNotRegulated);
+				//3.- Update the graphic values if a complaint is done.
+				updateGraphicValues(complaintDone, normViolated, contentIsNotRegulated);
+			}
 		}
 	}
 
@@ -778,7 +782,7 @@ public class OnlineCommunityUser implements EnvironmentAgent {
 	public String getPopulation(){
 		return population;
 	}
-	
+
 	public void setPopulationName(String populationName) {
 		this.population = populationName;
 	}

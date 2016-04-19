@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
@@ -19,6 +21,8 @@ import javax.swing.event.DocumentListener;
 
 import es.csic.iiia.normlab.launcher.model.RepastXMLManager;
 import es.csic.iiia.normlab.launcher.ui.NormLabFrame.NormLabSimulator;
+import es.csic.iiia.normlab.launcher.utils.JDecimalField;
+import es.csic.iiia.normlab.launcher.utils.JIntegerField;
 
 /**
  *
@@ -48,10 +52,10 @@ public class DialogSynthesisConfiguration extends JDialog {
 	private String normsMinEvaluationsToDecide;
 	private String normEffDeactThreshold;
 	private String normNecDeactThreshold;
-	private String normEffDeactThresholdEpsilon;
-	private String normNecDeactThresholdEpsilon;
+	private String normEffActThreshold;
+	private String normNecActThreshold;
 	private String normGroupsMinEvaluationsToDecide;
-	
+
 	/**
 	 * Creates new form NormLabConfiguratorFrame
 	 * @throws Exception 
@@ -65,12 +69,12 @@ public class DialogSynthesisConfiguration extends JDialog {
 		configManager = cManager;
 		strategy = synthStrategy;
 		sim = simulator;
-		
+
 		initComponents();
 		setResizable(false);
-		
+
 		this.lblTitle.setText("NormLab: " + sim + " synthesis settings");
-		
+
 		/* Load synthesis configuration from the configuration 
 		 * manager received by argument */
 		this.loadConfig();
@@ -78,10 +82,10 @@ public class DialogSynthesisConfiguration extends JDialog {
 		/* Check the configuration that must be employed by default
 		 * depending on the synthesis strategy that is to be employed */
 		this.checkDefaultConfig(strategy);
-		
+
 		/* Display configuration in the dialog */
 		this.displayConfig();
-		
+
 		/* Lock option (if necessary) depending on the chosen strategy */
 		this.lockUnusedOptions(strategy);
 	}
@@ -108,8 +112,8 @@ public class DialogSynthesisConfiguration extends JDialog {
 		normsMinEvaluationsToDecide = configManager.getAttribute("normsMinEvaluationsToDecide");
 		normEffDeactThreshold = configManager.getAttribute("normEffDeactThreshold");
 		normNecDeactThreshold= configManager.getAttribute("normNecDeactThreshold");
-		normEffDeactThresholdEpsilon= configManager.getAttribute("normEffDeactThresholdEpsilon");
-		normNecDeactThresholdEpsilon= configManager.getAttribute("normNecDeactThresholdEpsilon");
+		normEffActThreshold = configManager.getAttribute("normEffActThreshold");
+		normNecActThreshold = configManager.getAttribute("normNecActThreshold");
 		normGroupsMinEvaluationsToDecide= configManager.getAttribute("normGroupsMinEvaluationsToDecide");
 	}
 
@@ -118,6 +122,15 @@ public class DialogSynthesisConfiguration extends JDialog {
 	 * 
 	 */
 	private void saveConfig() throws Exception {
+		
+		NumberFormat format = NumberFormat.getInstance(Locale.US);
+		
+		/* Format integer numbers */
+		numTicksToConverge = format.parse(numTicksToConverge).toString();
+		normsPerfRangeSize = format.parse(normsPerfRangeSize).toString();
+		normsMinEvaluationsToDecide = format.parse(normsMinEvaluationsToDecide).toString();
+		normGroupsMinEvaluationsToDecide = format.parse(normGroupsMinEvaluationsToDecide).toString();
+		
 		configManager.setAttribute("normGenerationApproach", normGenerationApproach);
 		configManager.setAttribute("pursueCompactness", pursueCompactness);
 		configManager.setAttribute("pursueLiberality", pursueLiberality);
@@ -134,8 +147,8 @@ public class DialogSynthesisConfiguration extends JDialog {
 		configManager.setAttribute("normsMinEvaluationsToDecide", normsMinEvaluationsToDecide);
 		configManager.setAttribute("normEffDeactThreshold", normEffDeactThreshold);
 		configManager.setAttribute("normNecDeactThreshold", normNecDeactThreshold);
-		configManager.setAttribute("normEffDeactThresholdEpsilon", normEffDeactThresholdEpsilon);
-		configManager.setAttribute("normNecDeactThresholdEpsilon", normNecDeactThresholdEpsilon);
+		configManager.setAttribute("normEffActThreshold", normEffActThreshold);
+		configManager.setAttribute("normNecActThreshold", normNecActThreshold);
 		configManager.setAttribute("normGroupsMinEvaluationsToDecide", normGroupsMinEvaluationsToDecide);
 	}
 
@@ -160,24 +173,19 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.rbShallow.setSelected(optimisticNormGeneralisationMode.equals("0"));
 		this.rbDeep.setSelected(optimisticNormGeneralisationMode.equals("1"));
 		this.txtGenStep.setText(optimisticNormGeneralisationStep);
-		this.txtActEff.setText(normEffDeactThreshold);
-		this.txtActNec.setText(normNecDeactThreshold);
+		this.txtActEff.setText(normEffActThreshold);
+		this.txtActNec.setText(normNecActThreshold);
 		this.txtDeactEff.setText(normEffDeactThreshold);
 		this.txtDeactNec.setText(normNecDeactThreshold);
 		this.txtGenEff.setText(normEffGenThreshold);
 		this.txtGenNec.setText(normNecGenThreshold);
 		this.txtDeliberativeness.setText(normsMinEvaluationsToDecide);
 		this.txtDeliberativenessGroups.setText(normGroupsMinEvaluationsToDecide);
-		
+
 		this.enableCompactness(this.rbCompactnessYes.isSelected());
 		this.enableLiberality(this.rbLiberalityYes.isSelected());
 		this.enableDeliberativeness(this.rbDeliberative.isSelected());
 		this.txtLearningFactor.setEnabled(this.rbBB.isSelected());
-//		
-//		/* Lock unavailable options */
-//		if(this.lockUnavailableOptions) {
-//			
-//		}
 	}
 
 	/**
@@ -193,9 +201,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 		case 7:	this.configureAsDESMON();	break;
 		}
 	}
-	
 
-	
+
+
 	/**
 	 * Sets BASE's default parameters 
 	 */
@@ -264,7 +272,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.normEvaluationLearningRate = "0.0";
 		this.normGroupsMinEvaluationsToDecide = "0";
 		this.normGenerationApproach = "1";
-		
+
 		int num = Integer.valueOf(normsMinEvaluationsToDecide);
 		if(num <= 1) {
 			this.normsMinEvaluationsToDecide = "10";	
@@ -295,7 +303,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.rbBB.setEnabled(false);
 		this.txtLearningFactor.setEnabled(false);
 		this.rbDeliberative.setEnabled(false);	  
-  }
+	}
 
 	/**
 	 * 
@@ -312,7 +320,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.rbShallow.setEnabled(false);
 		this.rbDeep.setEnabled(false);
 		this.txtGenStep.setEnabled(false);	  
-  }
+	}
 
 	/**
 	 * 
@@ -328,8 +336,8 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.txtActNec.setEnabled(false);
 		this.rbDeliberative.setEnabled(false);
 		this.rbConservative.setEnabled(false);	  
-  }
-	
+	}
+
 	/**
 	 * 
 	 */
@@ -343,8 +351,8 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.txtActEff.setEnabled(false);
 		this.txtActNec.setEnabled(false);
 		this.rbDeliberative.setEnabled(false);	  
-  }
-	
+	}
+
 	/**
 	 * 
 	 */
@@ -357,21 +365,21 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.txtDeliberativenessGroups.setEnabled(false);
 		this.rbConservative.setEnabled(false);
 		this.rbReactive.setEnabled(false);	  
-  }
-	
+	}
+
 	/**
 	 * 
 	 * @param enable
 	 */
 	private void enableCompactness(boolean enable) {
-	  this.rbConservative.setEnabled(enable);
-	  this.rbOptimistic.setEnabled(enable);
-	  this.rbDeep.setEnabled(enable);
-	  this.rbShallow.setEnabled(enable);
-	  this.txtGenStep.setEnabled(enable);
-	  this.txtGenEff.setEnabled(enable);
-	  this.txtGenNec.setEnabled(enable);
-  }
+		this.rbConservative.setEnabled(enable);
+		this.rbOptimistic.setEnabled(enable);
+		this.rbDeep.setEnabled(enable);
+		this.rbShallow.setEnabled(enable);
+		this.txtGenStep.setEnabled(enable);
+		this.txtGenEff.setEnabled(enable);
+		this.txtGenNec.setEnabled(enable);
+	}
 
 	/**
 	 * 
@@ -389,7 +397,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.txtDeliberativeness.setEnabled(enable);	  
 		this.txtActEff.setEnabled(enable);
 		this.txtActNec.setEnabled(enable);
-  }
+	}
 
 	/**
 	 * 
@@ -411,18 +419,6 @@ public class DialogSynthesisConfiguration extends JDialog {
 	 */
 	private void btnExitActionPerformed(ActionEvent evt) {
 		this.dispose();
-//		try {
-//			
-//			/* Reload and display configuration */
-//			this.loadConfig();
-//			this.displayConfig();
-//
-//			/* Lock option (if necessary) depending on the chosen strategy */
-//			this.lockUnusedOptions(strategy);
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	private void rbCompactnessYesActionPerformed(ActionEvent evt) {
@@ -450,7 +446,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.normEvaluationMechanism = "0";
 		this.txtLearningFactor.setEnabled(true);
 	}
-	
+
 	private void rbMAvgActionPerformed(ActionEvent evt) {
 		this.normEvaluationMechanism = "1";
 		this.txtLearningFactor.setEnabled(false);
@@ -495,19 +491,19 @@ public class DialogSynthesisConfiguration extends JDialog {
 	}
 
 	private void txtActEffActionPerformed(DocumentEvent evt) {
-		this.normEffDeactThreshold = this.txtActEff.getText();
+		this.normEffActThreshold = this.txtActEff.getText();
 	}
 
 	private void txtActNecActionPerformed(DocumentEvent evt) {
-		this.normNecDeactThreshold = this.txtActNec.getText();
+		this.normNecActThreshold = this.txtActNec.getText();
 	}
 
 	private void txtDeactEffActionPerformed(DocumentEvent evt) {
-		this.normEffDeactThreshold = this.txtActEff.getText();
+		this.normEffDeactThreshold = this.txtDeactEff.getText();
 	}
 
 	private void txtDeactNecActionPerformed(DocumentEvent evt) {
-		this.normNecDeactThreshold = this.txtActNec.getText();
+		this.normNecDeactThreshold = this.txtDeactNec.getText();
 	}
 
 	private void txtGenEffActionPerformed(DocumentEvent evt) {
@@ -590,68 +586,68 @@ public class DialogSynthesisConfiguration extends JDialog {
 	 */
 	private void initComponents() {
 
-    rbgCompactness = new javax.swing.ButtonGroup();
-    rbgLiberality = new javax.swing.ButtonGroup();
-    rbgGenApproach = new javax.swing.ButtonGroup();
-    rbgGenMode = new javax.swing.ButtonGroup();
-    rbgEvApproach = new javax.swing.ButtonGroup();
-    rbgActApproach = new javax.swing.ButtonGroup();
-    panelConfig = new javax.swing.JPanel();
-    panelGeneralisation = new javax.swing.JPanel();
-    lblGenApproach = new javax.swing.JLabel();
-    rbConservative = new javax.swing.JRadioButton();
-    rbOptimistic = new javax.swing.JRadioButton();
-    lblGenMode = new javax.swing.JLabel();
-    lblGenStep = new javax.swing.JLabel();
-    rbShallow = new javax.swing.JRadioButton();
-    rbDeep = new javax.swing.JRadioButton();
-    txtGenStep = new javax.swing.JTextField();
-    lblGenThresholds = new javax.swing.JLabel();
-    txtGenEff = new javax.swing.JTextField();
-    lblGenEff = new javax.swing.JLabel();
-    lblGenNec = new javax.swing.JLabel();
-    txtGenNec = new javax.swing.JTextField();
-    panelEvaluation = new javax.swing.JPanel();
-    lblEvMech = new javax.swing.JLabel();
-    rbBB = new javax.swing.JRadioButton();
-    rbMAvg = new javax.swing.JRadioButton();
-    lblLearningFactor = new javax.swing.JLabel();
-    txtLearningFactor = new javax.swing.JTextField();
-    lblPerfRangSize = new javax.swing.JLabel();
-    txtPerfRangeSize = new javax.swing.JTextField();
-    lblDefUtility = new javax.swing.JLabel();
-    txtDefUtility = new javax.swing.JTextField();
-    btnSave = new javax.swing.JButton();
-    btnExit = new javax.swing.JButton();
-    lblTitle = new javax.swing.JLabel();
-    panelGeneral = new javax.swing.JPanel();
-    lblCompactness = new javax.swing.JLabel();
-    rbCompactnessYes = new javax.swing.JRadioButton();
-    rbCompactnessNo = new javax.swing.JRadioButton();
-    lblLiberailty = new javax.swing.JLabel();
-    rbLiberalityYes = new javax.swing.JRadioButton();
-    rbLiberalityNo = new javax.swing.JRadioButton();
-    lblStability = new javax.swing.JLabel();
-    txtStability = new javax.swing.JTextField();
-    panelActDeact = new javax.swing.JPanel();
-    lblReactivity = new javax.swing.JLabel();
-    txtDeliberativeness = new javax.swing.JTextField();
-    lblActThresholds = new javax.swing.JLabel();
-    lblDeactThresholds = new javax.swing.JLabel();
-    lblReactivityGroups = new javax.swing.JLabel();
-    txtDeliberativenessGroups = new javax.swing.JTextField();
-    lblActApproach = new javax.swing.JLabel();
-    rbReactive = new javax.swing.JRadioButton();
-    rbDeliberative = new javax.swing.JRadioButton();
-    lblActEff = new javax.swing.JLabel();
-    txtActEff = new javax.swing.JTextField();
-    lblDeactEff = new javax.swing.JLabel();
-    txtDeactEff = new javax.swing.JTextField();
-    lblActNec = new javax.swing.JLabel();
-    txtActNec = new javax.swing.JTextField();
-    lblDeactNec = new javax.swing.JLabel();
-    txtDeactNec = new javax.swing.JTextField();
-    lblInfo = new javax.swing.JLabel();
+		rbgCompactness = new javax.swing.ButtonGroup();
+		rbgLiberality = new javax.swing.ButtonGroup();
+		rbgGenApproach = new javax.swing.ButtonGroup();
+		rbgGenMode = new javax.swing.ButtonGroup();
+		rbgEvApproach = new javax.swing.ButtonGroup();
+		rbgActApproach = new javax.swing.ButtonGroup();
+		panelConfig = new javax.swing.JPanel();
+		panelGeneralisation = new javax.swing.JPanel();
+		lblGenApproach = new javax.swing.JLabel();
+		rbConservative = new javax.swing.JRadioButton();
+		rbOptimistic = new javax.swing.JRadioButton();
+		lblGenMode = new javax.swing.JLabel();
+		lblGenStep = new javax.swing.JLabel();
+		rbShallow = new javax.swing.JRadioButton();
+		rbDeep = new javax.swing.JRadioButton();
+		txtGenStep = new JIntegerField(1);
+		lblGenThresholds = new javax.swing.JLabel();
+		txtGenEff = new JDecimalField(2);
+		lblGenEff = new javax.swing.JLabel();
+		lblGenNec = new javax.swing.JLabel();
+		txtGenNec = new JDecimalField(2);
+		panelEvaluation = new javax.swing.JPanel();
+		lblEvMech = new javax.swing.JLabel();
+		rbBB = new javax.swing.JRadioButton();
+		rbMAvg = new javax.swing.JRadioButton();
+		lblLearningFactor = new javax.swing.JLabel();
+		txtLearningFactor = new JDecimalField(2);
+		lblPerfRangSize = new javax.swing.JLabel();
+		txtPerfRangeSize = new JIntegerField(1);
+		lblDefUtility = new javax.swing.JLabel();
+		txtDefUtility = new JDecimalField(2);
+		btnSave = new javax.swing.JButton();
+		btnExit = new javax.swing.JButton();
+		lblTitle = new javax.swing.JLabel();
+		panelGeneral = new javax.swing.JPanel();
+		lblCompactness = new javax.swing.JLabel();
+		rbCompactnessYes = new javax.swing.JRadioButton();
+		rbCompactnessNo = new javax.swing.JRadioButton();
+		lblLiberailty = new javax.swing.JLabel();
+		rbLiberalityYes = new javax.swing.JRadioButton();
+		rbLiberalityNo = new javax.swing.JRadioButton();
+		lblStability = new javax.swing.JLabel();
+		txtStability = new JIntegerField(1);
+		panelActDeact = new javax.swing.JPanel();
+		lblReactivity = new javax.swing.JLabel();
+		txtDeliberativeness = new JIntegerField(0);
+		lblActThresholds = new javax.swing.JLabel();
+		lblDeactThresholds = new javax.swing.JLabel();
+		lblReactivityGroups = new javax.swing.JLabel();
+		txtDeliberativenessGroups = new JIntegerField(0);
+		lblActApproach = new javax.swing.JLabel();
+		rbReactive = new javax.swing.JRadioButton();
+		rbDeliberative = new javax.swing.JRadioButton();
+		lblActEff = new javax.swing.JLabel();
+		txtActEff = new JDecimalField(2);
+		lblDeactEff = new javax.swing.JLabel();
+		txtDeactEff = new JDecimalField(2);
+		lblActNec = new javax.swing.JLabel();
+		txtActNec = new JDecimalField(2);
+		lblDeactNec = new javax.swing.JLabel();
+		txtDeactNec = new JDecimalField(2);
+		lblInfo = new javax.swing.JLabel();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 		setResizable(false);
@@ -713,7 +709,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtGenStepActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -733,7 +731,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtGenEffActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -753,7 +753,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtGenNecActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -761,73 +763,73 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 		});
 
-    javax.swing.GroupLayout panelGeneralisationLayout = new javax.swing.GroupLayout(panelGeneralisation);
-    panelGeneralisation.setLayout(panelGeneralisationLayout);
-    panelGeneralisationLayout.setHorizontalGroup(
-        panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelGeneralisationLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblGenStep)
-                .addGroup(panelGeneralisationLayout.createSequentialGroup()
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(lblGenApproach)
-                        .addComponent(lblGenMode))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(rbOptimistic)
-                        .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtGenStep, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(rbDeep)))))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(rbShallow, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(rbConservative))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblGenThresholds)
-                .addGroup(panelGeneralisationLayout.createSequentialGroup()
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(lblGenEff)
-                        .addComponent(lblGenNec))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtGenNec, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                        .addComponent(txtGenEff))))
-            .addContainerGap())
-    );
-    panelGeneralisationLayout.setVerticalGroup(
-        panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelGeneralisationLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelGeneralisationLayout.createSequentialGroup()
-                    .addComponent(lblGenThresholds)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblGenEff)
-                        .addComponent(txtGenEff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtGenNec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblGenNec)))
-                .addGroup(panelGeneralisationLayout.createSequentialGroup()
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblGenApproach)
-                        .addComponent(rbConservative)
-                        .addComponent(rbOptimistic))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rbDeep)
-                            .addComponent(lblGenMode))
-                        .addComponent(rbShallow))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtGenStep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblGenStep, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
+		javax.swing.GroupLayout panelGeneralisationLayout = new javax.swing.GroupLayout(panelGeneralisation);
+		panelGeneralisation.setLayout(panelGeneralisationLayout);
+		panelGeneralisationLayout.setHorizontalGroup(
+				panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelGeneralisationLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addComponent(lblGenStep)
+								.addGroup(panelGeneralisationLayout.createSequentialGroup()
+										.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(lblGenApproach)
+												.addComponent(lblGenMode))
+												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+												.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addComponent(rbOptimistic)
+														.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+																.addComponent(txtGenStep, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+																.addComponent(rbDeep)))))
+																.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+																.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+																		.addComponent(rbShallow, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+																		.addComponent(rbConservative))
+																		.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+																		.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+																				.addComponent(lblGenThresholds)
+																				.addGroup(panelGeneralisationLayout.createSequentialGroup()
+																						.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+																								.addComponent(lblGenEff)
+																								.addComponent(lblGenNec))
+																								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+																								.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+																										.addComponent(txtGenNec, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+																										.addComponent(txtGenEff))))
+																										.addContainerGap())
+				);
+		panelGeneralisationLayout.setVerticalGroup(
+				panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelGeneralisationLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addGroup(panelGeneralisationLayout.createSequentialGroup()
+										.addComponent(lblGenThresholds)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+												.addComponent(lblGenEff)
+												.addComponent(txtGenEff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+												.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+														.addComponent(txtGenNec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addComponent(lblGenNec)))
+														.addGroup(panelGeneralisationLayout.createSequentialGroup()
+																.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+																		.addComponent(lblGenApproach)
+																		.addComponent(rbConservative)
+																		.addComponent(rbOptimistic))
+																		.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+																		.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+																				.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+																						.addComponent(rbDeep)
+																						.addComponent(lblGenMode))
+																						.addComponent(rbShallow))
+																						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+																						.addGroup(panelGeneralisationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+																								.addComponent(txtGenStep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+																								.addComponent(lblGenStep, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+																								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				);
 
 		panelEvaluation.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Norm evaluation settings", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
@@ -872,7 +874,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtLearningFactorActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -892,7 +896,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtPerfRangeSizeActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -904,7 +910,6 @@ public class DialogSynthesisConfiguration extends JDialog {
 		lblDefUtility.setText("Norms' default utility [0,1]");
 		lblDefUtility.setToolTipText("The default utility of each norm once created");
 
-		txtDefUtility.setText("0.5");
 		txtDefUtility.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -912,7 +917,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtDefUtilityActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -920,70 +927,70 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 		});
 
-    javax.swing.GroupLayout panelEvaluationLayout = new javax.swing.GroupLayout(panelEvaluation);
-    panelEvaluation.setLayout(panelEvaluationLayout);
-    panelEvaluationLayout.setHorizontalGroup(
-        panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelEvaluationLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblEvMech)
-                .addComponent(lblPerfRangSize))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelEvaluationLayout.createSequentialGroup()
-                    .addComponent(rbMAvg)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(rbBB))
-                .addGroup(panelEvaluationLayout.createSequentialGroup()
-                    .addGap(4, 4, 4)
-                    .addComponent(txtPerfRangeSize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(lblLearningFactor)
-                .addComponent(lblDefUtility))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                .addComponent(txtDefUtility, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                .addComponent(txtLearningFactor))
-            .addContainerGap())
-    );
-    panelEvaluationLayout.setVerticalGroup(
-        panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelEvaluationLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(lblEvMech)
-                .addComponent(rbMAvg)
-                .addComponent(txtLearningFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(rbBB)
-                .addComponent(lblLearningFactor))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDefUtility, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDefUtility))
-                .addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPerfRangSize)
-                    .addComponent(txtPerfRangeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addContainerGap())
-    );
+		javax.swing.GroupLayout panelEvaluationLayout = new javax.swing.GroupLayout(panelEvaluation);
+		panelEvaluation.setLayout(panelEvaluationLayout);
+		panelEvaluationLayout.setHorizontalGroup(
+				panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelEvaluationLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addComponent(lblEvMech)
+								.addComponent(lblPerfRangSize))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+								.addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+										.addGroup(panelEvaluationLayout.createSequentialGroup()
+												.addComponent(rbMAvg)
+												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(rbBB))
+												.addGroup(panelEvaluationLayout.createSequentialGroup()
+														.addGap(4, 4, 4)
+														.addComponent(txtPerfRangeSize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+														.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+																.addComponent(lblLearningFactor)
+																.addComponent(lblDefUtility))
+																.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+																.addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+																		.addComponent(txtDefUtility, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+																		.addComponent(txtLearningFactor))
+																		.addContainerGap())
+				);
+		panelEvaluationLayout.setVerticalGroup(
+				panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelEvaluationLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(lblEvMech)
+								.addComponent(rbMAvg)
+								.addComponent(txtLearningFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(rbBB)
+								.addComponent(lblLearningFactor))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+										.addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+												.addComponent(txtDefUtility, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+												.addComponent(lblDefUtility))
+												.addGroup(panelEvaluationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+														.addComponent(lblPerfRangSize)
+														.addComponent(txtPerfRangeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+														.addContainerGap())
+				);
 
-    btnSave.setIcon(new javax.swing.ImageIcon("misc/launcher/icons/save.png")); // NOI18N
-    btnSave.setText("Save and exit");
-    btnSave.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btnSaveActionPerformed(evt);
-        }
-    });
+		btnSave.setIcon(new javax.swing.ImageIcon("misc/launcher/icons/save.png")); // NOI18N
+		btnSave.setText("Save and exit");
+		btnSave.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				btnSaveActionPerformed(evt);
+			}
+		});
 
-    btnExit.setIcon(new javax.swing.ImageIcon("misc/launcher/icons/exit.png"));
-    btnExit.setText("Exit");
-    btnExit.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btnExitActionPerformed(evt);
-        }
-    });
+		btnExit.setIcon(new javax.swing.ImageIcon("misc/launcher/icons/exit.png"));
+		btnExit.setText("Exit");
+		btnExit.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				btnExitActionPerformed(evt);
+			}
+		});
 
 		lblTitle.setBackground(new java.awt.Color(255, 255, 255));
 		lblTitle.setFont(new java.awt.Font("Tahoma", 0, 19)); // NOI18N
@@ -1051,7 +1058,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtStabilityActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -1122,7 +1131,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtDeliberativenessActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -1130,7 +1141,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 		});
 
-		txtActEff.setText("0.0");
+//		txtActEff.setText("0.0");
 		txtActEff.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -1138,7 +1149,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtActEffActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -1160,7 +1173,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtActNecActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -1172,7 +1187,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 
 		lblActNec.setText("Necessity       [0,1]");
 
-		txtDeactEff.setText("0.0");
+//		txtDeactEff.setText("0.0");
 		txtDeactEff.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -1180,7 +1195,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtDeactEffActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -1194,7 +1211,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 				+ " norm is considered as not effective <br>\nor necessary "
 				+ "enough to be part of the normative system </html>");
 
-		txtDeactNec.setText("0.0");
+//		txtDeactNec.setText("0.0");
 		txtDeactNec.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
@@ -1202,7 +1219,9 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {}
+			public void removeUpdate(DocumentEvent e) {
+				txtDeactNecActionPerformed(e);
+			}
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -1227,6 +1246,7 @@ public class DialogSynthesisConfiguration extends JDialog {
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
+				txtReactivityGroupsActionPerformed(e);
 			}
 
 			@Override
@@ -1235,228 +1255,228 @@ public class DialogSynthesisConfiguration extends JDialog {
 			}
 		});
 
-    lblActApproach.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-    lblActApproach.setText("Generation approach");
-    lblActApproach.setToolTipText("<html>\nApproach considered when deciding whether to activate created norms.<br>\nIn reactivate generation, norms are activated right after being created.<br>\nIn deliberative generation, norms are activated only when they have been <br>\nevaluated a minimum amount of times, and there is enough evidence to<br>\nassess whether they perform well. \n</html>");
+		lblActApproach.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+		lblActApproach.setText("Generation approach");
+		lblActApproach.setToolTipText("<html>\nApproach considered when deciding whether to activate created norms.<br>\nIn reactivate generation, norms are activated right after being created.<br>\nIn deliberative generation, norms are activated only when they have been <br>\nevaluated a minimum amount of times, and there is enough evidence to<br>\nassess whether they perform well. \n</html>");
 
-    rbgActApproach.add(rbReactive);
-    rbReactive.setSelected(true);
-    rbReactive.setText("Reactive");
-    rbReactive.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            rbReactiveActionPerformed(evt);
-        }
-    });
+		rbgActApproach.add(rbReactive);
+		rbReactive.setSelected(true);
+		rbReactive.setText("Reactive");
+		rbReactive.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				rbReactiveActionPerformed(evt);
+			}
+		});
 
-    rbgActApproach.add(rbDeliberative);
-    rbDeliberative.setText("Deliberative");
-    rbDeliberative.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            rbDeliberativeActionPerformed(evt);
-        }
-    });
-    
-    javax.swing.GroupLayout panelActDeactLayout = new javax.swing.GroupLayout(panelActDeact);
-    panelActDeact.setLayout(panelActDeactLayout);
-    panelActDeactLayout.setHorizontalGroup(
-        panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelActDeactLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelActDeactLayout.createSequentialGroup()
-                    .addComponent(lblActApproach)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(rbReactive)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(rbDeliberative))
-                .addGroup(panelActDeactLayout.createSequentialGroup()
-                    .addComponent(lblReactivity)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(txtDeliberativeness, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(panelActDeactLayout.createSequentialGroup()
-                    .addComponent(lblReactivityGroups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(txtDeliberativenessGroups, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-            .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lblActThresholds)
-                .addGroup(panelActDeactLayout.createSequentialGroup()
-                    .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(lblActEff)
-                        .addComponent(lblActNec))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtActEff)
-                        .addComponent(txtActNec, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelActDeactLayout.createSequentialGroup()
-                    .addGap(19, 19, 19)
-                    .addComponent(lblDeactThresholds))
-                .addGroup(panelActDeactLayout.createSequentialGroup()
-                    .addGap(18, 18, 18)
-                    .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(lblDeactEff)
-                        .addComponent(lblDeactNec))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtDeactEff, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                        .addComponent(txtDeactNec))))
-            .addContainerGap())
-    );
-    panelActDeactLayout.setVerticalGroup(
-        panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelActDeactLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(lblActApproach)
-                .addComponent(rbReactive)
-                .addComponent(rbDeliberative)
-                .addComponent(lblActThresholds)
-                .addComponent(lblDeactThresholds))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(lblReactivity)
-                .addComponent(txtDeliberativeness, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblActEff)
-                .addComponent(txtActEff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblDeactEff)
-                .addComponent(txtDeactEff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(3, 3, 3)
-            .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(txtDeliberativenessGroups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblReactivityGroups, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblActNec)
-                    .addComponent(txtActNec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDeactNec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDeactNec)))
-            .addContainerGap())
-    );
+		rbgActApproach.add(rbDeliberative);
+		rbDeliberative.setText("Deliberative");
+		rbDeliberative.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				rbDeliberativeActionPerformed(evt);
+			}
+		});
+
+		javax.swing.GroupLayout panelActDeactLayout = new javax.swing.GroupLayout(panelActDeact);
+		panelActDeact.setLayout(panelActDeactLayout);
+		panelActDeactLayout.setHorizontalGroup(
+				panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelActDeactLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addGroup(panelActDeactLayout.createSequentialGroup()
+										.addComponent(lblActApproach)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+										.addComponent(rbReactive)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+										.addComponent(rbDeliberative))
+										.addGroup(panelActDeactLayout.createSequentialGroup()
+												.addComponent(lblReactivity)
+												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(txtDeliberativeness, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+												.addGroup(panelActDeactLayout.createSequentialGroup()
+														.addComponent(lblReactivityGroups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+														.addComponent(txtDeliberativenessGroups, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+														.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+														.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+																.addComponent(lblActThresholds)
+																.addGroup(panelActDeactLayout.createSequentialGroup()
+																		.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+																				.addComponent(lblActEff)
+																				.addComponent(lblActNec))
+																				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+																				.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+																						.addComponent(txtActEff)
+																						.addComponent(txtActNec, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
+																						.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+																								.addGroup(panelActDeactLayout.createSequentialGroup()
+																										.addGap(19, 19, 19)
+																										.addComponent(lblDeactThresholds))
+																										.addGroup(panelActDeactLayout.createSequentialGroup()
+																												.addGap(18, 18, 18)
+																												.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+																														.addComponent(lblDeactEff)
+																														.addComponent(lblDeactNec))
+																														.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+																														.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+																																.addComponent(txtDeactEff, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+																																.addComponent(txtDeactNec))))
+																																.addContainerGap())
+				);
+		panelActDeactLayout.setVerticalGroup(
+				panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelActDeactLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(lblActApproach)
+								.addComponent(rbReactive)
+								.addComponent(rbDeliberative)
+								.addComponent(lblActThresholds)
+								.addComponent(lblDeactThresholds))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+										.addComponent(lblReactivity)
+										.addComponent(txtDeliberativeness, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblActEff)
+										.addComponent(txtActEff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblDeactEff)
+										.addComponent(txtDeactEff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+										.addGap(3, 3, 3)
+										.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(txtDeliberativenessGroups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+												.addComponent(lblReactivityGroups, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+												.addGroup(panelActDeactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+														.addComponent(lblActNec)
+														.addComponent(txtActNec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addComponent(txtDeactNec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addComponent(lblDeactNec)))
+														.addContainerGap())
+				);
 
 
-    lblInfo.setIcon(new javax.swing.ImageIcon("misc/launcher/icons/info.png")); // NOI18N
-    lblInfo.setText("Hold mouse pointer on each parameter to show more details about it");
+		lblInfo.setIcon(new javax.swing.ImageIcon("misc/launcher/icons/info.png")); // NOI18N
+		lblInfo.setText("Hold mouse pointer on each parameter to show more details about it");
 
-    javax.swing.GroupLayout panelConfigLayout = new javax.swing.GroupLayout(panelConfig);
-    panelConfig.setLayout(panelConfigLayout);
-    panelConfigLayout.setHorizontalGroup(
-        panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelConfigLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(panelGeneralisation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panelConfigLayout.createSequentialGroup()
-                    .addComponent(btnExit)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSave))
-                .addGroup(panelConfigLayout.createSequentialGroup()
-                    .addGroup(panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(lblInfo, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(panelActDeact, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelEvaluation, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelGeneral, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGap(0, 0, Short.MAX_VALUE)))
-            .addContainerGap())
-    );
-    panelConfigLayout.setVerticalGroup(
-        panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelConfigLayout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(lblTitle)
-            .addGap(18, 18, 18)
-            .addComponent(lblInfo)
-            .addGap(18, 18, 18)
-            .addComponent(panelGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(panelEvaluation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(panelActDeact, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(panelGeneralisation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnExit))
-            .addContainerGap())
-    );
+		javax.swing.GroupLayout panelConfigLayout = new javax.swing.GroupLayout(panelConfig);
+		panelConfig.setLayout(panelConfigLayout);
+		panelConfigLayout.setHorizontalGroup(
+				panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelConfigLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addComponent(panelGeneralisation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGroup(panelConfigLayout.createSequentialGroup()
+										.addComponent(btnExit)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(btnSave))
+										.addGroup(panelConfigLayout.createSequentialGroup()
+												.addGroup(panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+														.addComponent(lblInfo, javax.swing.GroupLayout.Alignment.LEADING)
+														.addComponent(panelActDeact, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(panelEvaluation, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(panelGeneral, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+														.addGap(0, 0, Short.MAX_VALUE)))
+														.addContainerGap())
+				);
+		panelConfigLayout.setVerticalGroup(
+				panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelConfigLayout.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(lblTitle)
+						.addGap(18, 18, 18)
+						.addComponent(lblInfo)
+						.addGap(18, 18, 18)
+						.addComponent(panelGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+						.addComponent(panelEvaluation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+						.addComponent(panelActDeact, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+						.addComponent(panelGeneralisation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(panelConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(btnExit))
+								.addContainerGap())
+				);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(panelConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-    );
-    layout.setVerticalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(panelConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-    );
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addComponent(panelConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+				);
+		layout.setVerticalGroup(
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addComponent(panelConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+				);
 
-    pack();
-	}// </editor-fold>//GEN-END:initComponents
+		pack();
+	}
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton btnSave;
-  private javax.swing.JButton btnExit;
-  private javax.swing.JLabel lblActApproach;
-  private javax.swing.JLabel lblActEff;
-  private javax.swing.JLabel lblActNec;
-  private javax.swing.JLabel lblActThresholds;
-  private javax.swing.JLabel lblCompactness;
-  private javax.swing.JLabel lblDeactEff;
-  private javax.swing.JLabel lblDeactNec;
-  private javax.swing.JLabel lblDeactThresholds;
-  private javax.swing.JLabel lblDefUtility;
-  private javax.swing.JLabel lblEvMech;
-  private javax.swing.JLabel lblGenApproach;
-  private javax.swing.JLabel lblGenEff;
-  private javax.swing.JLabel lblGenMode;
-  private javax.swing.JLabel lblGenNec;
-  private javax.swing.JLabel lblGenStep;
-  private javax.swing.JLabel lblGenThresholds;
-  private javax.swing.JLabel lblInfo;
-  private javax.swing.JLabel lblLearningFactor;
-  private javax.swing.JLabel lblLiberailty;
-  private javax.swing.JLabel lblPerfRangSize;
-  private javax.swing.JLabel lblReactivity;
-  private javax.swing.JLabel lblReactivityGroups;
-  private javax.swing.JLabel lblStability;
-  private javax.swing.JLabel lblTitle;
-  private javax.swing.JPanel panelActDeact;
-  private javax.swing.JPanel panelConfig;
-  private javax.swing.JPanel panelEvaluation;
-  private javax.swing.JPanel panelGeneral;
-  private javax.swing.JPanel panelGeneralisation;
-  private javax.swing.JRadioButton rbCompactnessNo;
-  private javax.swing.JRadioButton rbCompactnessYes;
-  private javax.swing.JRadioButton rbConservative;
-  private javax.swing.JRadioButton rbDeep;
-  private javax.swing.JRadioButton rbDeliberative;
-  private javax.swing.JRadioButton rbLiberalityNo;
-  private javax.swing.JRadioButton rbLiberalityYes;
-  private javax.swing.JRadioButton rbMAvg;
-  private javax.swing.JRadioButton rbOptimistic;
-  private javax.swing.JRadioButton rbBB;
-  private javax.swing.JRadioButton rbReactive;
-  private javax.swing.JRadioButton rbShallow;
-  private javax.swing.ButtonGroup rbgActApproach;
-  private javax.swing.ButtonGroup rbgCompactness;
-  private javax.swing.ButtonGroup rbgEvApproach;
-  private javax.swing.ButtonGroup rbgGenApproach;
-  private javax.swing.ButtonGroup rbgGenMode;
-  private javax.swing.ButtonGroup rbgLiberality;
-  private javax.swing.JTextField txtActEff;
-  private javax.swing.JTextField txtActNec;
-  private javax.swing.JTextField txtDeactEff;
-  private javax.swing.JTextField txtDeactNec;
-  private javax.swing.JTextField txtDefUtility;
-  private javax.swing.JTextField txtGenEff;
-  private javax.swing.JTextField txtGenNec;
-  private javax.swing.JTextField txtGenStep;
-  private javax.swing.JTextField txtLearningFactor;
-  private javax.swing.JTextField txtPerfRangeSize;
-  private javax.swing.JTextField txtDeliberativeness;
-  private javax.swing.JTextField txtDeliberativenessGroups;
-  private javax.swing.JTextField txtStability;
+	private javax.swing.JButton btnSave;
+	private javax.swing.JButton btnExit;
+	private javax.swing.JLabel lblActApproach;
+	private javax.swing.JLabel lblActEff;
+	private javax.swing.JLabel lblActNec;
+	private javax.swing.JLabel lblActThresholds;
+	private javax.swing.JLabel lblCompactness;
+	private javax.swing.JLabel lblDeactEff;
+	private javax.swing.JLabel lblDeactNec;
+	private javax.swing.JLabel lblDeactThresholds;
+	private javax.swing.JLabel lblDefUtility;
+	private javax.swing.JLabel lblEvMech;
+	private javax.swing.JLabel lblGenApproach;
+	private javax.swing.JLabel lblGenEff;
+	private javax.swing.JLabel lblGenMode;
+	private javax.swing.JLabel lblGenNec;
+	private javax.swing.JLabel lblGenStep;
+	private javax.swing.JLabel lblGenThresholds;
+	private javax.swing.JLabel lblInfo;
+	private javax.swing.JLabel lblLearningFactor;
+	private javax.swing.JLabel lblLiberailty;
+	private javax.swing.JLabel lblPerfRangSize;
+	private javax.swing.JLabel lblReactivity;
+	private javax.swing.JLabel lblReactivityGroups;
+	private javax.swing.JLabel lblStability;
+	private javax.swing.JLabel lblTitle;
+	private javax.swing.JPanel panelActDeact;
+	private javax.swing.JPanel panelConfig;
+	private javax.swing.JPanel panelEvaluation;
+	private javax.swing.JPanel panelGeneral;
+	private javax.swing.JPanel panelGeneralisation;
+	private javax.swing.JRadioButton rbCompactnessNo;
+	private javax.swing.JRadioButton rbCompactnessYes;
+	private javax.swing.JRadioButton rbConservative;
+	private javax.swing.JRadioButton rbDeep;
+	private javax.swing.JRadioButton rbDeliberative;
+	private javax.swing.JRadioButton rbLiberalityNo;
+	private javax.swing.JRadioButton rbLiberalityYes;
+	private javax.swing.JRadioButton rbMAvg;
+	private javax.swing.JRadioButton rbOptimistic;
+	private javax.swing.JRadioButton rbBB;
+	private javax.swing.JRadioButton rbReactive;
+	private javax.swing.JRadioButton rbShallow;
+	private javax.swing.ButtonGroup rbgActApproach;
+	private javax.swing.ButtonGroup rbgCompactness;
+	private javax.swing.ButtonGroup rbgEvApproach;
+	private javax.swing.ButtonGroup rbgGenApproach;
+	private javax.swing.ButtonGroup rbgGenMode;
+	private javax.swing.ButtonGroup rbgLiberality;
+	private JDecimalField txtActEff;
+	private JDecimalField txtActNec;
+	private JDecimalField txtDeactEff;
+	private JDecimalField txtDeactNec;
+	private JDecimalField txtDefUtility;
+	private JDecimalField txtGenEff;
+	private JDecimalField txtGenNec;
+	private JIntegerField txtGenStep;
+	private JDecimalField txtLearningFactor;
+	private JIntegerField txtPerfRangeSize;
+	private JIntegerField txtDeliberativeness;
+	private JIntegerField txtDeliberativenessGroups;
+	private JIntegerField txtStability;
 	// End of variables declaration//GEN-END:variables
 }

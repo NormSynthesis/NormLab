@@ -132,7 +132,7 @@ public class TrafficMetrics extends DefaultNormSynthesisMetrics implements NormS
 		int nnc = this.getNormativeNetworkCardinality();
 		int nsm = this.getNormativeSystemMinimality();
 		int nsfm = this.getNormativeSystemFitoussiMinimality();
-		double cols = this.getAvgNoViolCollisions();
+//		double cols = this.getAvgNoViolCollisions();
 		
 		int numNoViolColsThisTick = this.map.getNumNoViolCols();
 		this.nonRegulatedConflictsWindow.addValue(numNoViolColsThisTick);

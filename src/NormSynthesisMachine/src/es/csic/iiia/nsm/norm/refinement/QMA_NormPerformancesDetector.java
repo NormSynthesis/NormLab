@@ -53,8 +53,7 @@ public class QMA_NormPerformancesDetector implements NormPerformancesDetector {
 		Utility utility = this.normativeNetwork.getUtility(norm);
 		
 		for(Goal goal : this.nsmSettings.getSystemGoals()) {
-			double satDegree = this.nsmSettings.getNormDeactivationBoundary(dim, goal);
-			double epsilon = this.nsmSettings.getNormDeactivationBoundaryEpsilon(dim, goal);
+			double threshold = this.nsmSettings.getNormDeactivationThreshold(dim, goal);
 			double avg = utility.getPerformanceRange(dim, goal).getCurrentAverage();
 	
 			int minNumEvalsToClassify = this.nsmSettings.getMinEvaluationsToClassifyNorms();
@@ -62,7 +61,7 @@ public class QMA_NormPerformancesDetector implements NormPerformancesDetector {
 	
 			/* The norm under performs */
 			if(numValues > minNumEvalsToClassify) {
-				if(avg <= Math.max(0, (satDegree - epsilon))) {
+				if(avg <= Math.max(0, threshold)) {
 					return true;
 				}
 			}
@@ -84,8 +83,7 @@ public class QMA_NormPerformancesDetector implements NormPerformancesDetector {
 		Utility utility = this.normativeNetwork.getUtility(norm);
 		
 		for(Goal goal : this.nsmSettings.getSystemGoals()) {
-		double satDegree = this.nsmSettings.getNormDeactivationBoundary(dim, goal);
-			double epsilon = this.nsmSettings.getNormDeactivationBoundaryEpsilon(dim, goal);
+			double threshold = this.nsmSettings.getNormActivationThreshold(dim, goal);
 			double avg = utility.getPerformanceRange(dim, goal).getCurrentAverage();
 	
 			int minNumEvalsToClassify = this.nsmSettings.getMinEvaluationsToClassifyNorms();
@@ -93,7 +91,7 @@ public class QMA_NormPerformancesDetector implements NormPerformancesDetector {
 	
 			/* The norm performs well */
 			if(numValues > minNumEvalsToClassify) {
-				if(avg >= (satDegree + epsilon)) {
+				if(avg >= threshold) {
 					return true;
 				}
 			}

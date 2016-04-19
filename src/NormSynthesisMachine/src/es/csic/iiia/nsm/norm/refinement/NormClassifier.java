@@ -263,7 +263,7 @@ public class NormClassifier {
 					double topBoundary = utility.
 							getPerformanceRange(dim, goal).getCurrentTopBoundary();
 					double satDegree = this.nsmSettings.
-							getNormGeneralisationBoundary(dim, goal);
+							getNormGeneralisationThreshold(dim, goal);
 	
 					if(topBoundary < satDegree) {
 						canGeneralise = false;

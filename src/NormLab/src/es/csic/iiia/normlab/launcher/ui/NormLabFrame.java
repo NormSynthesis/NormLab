@@ -280,11 +280,11 @@ public class NormLabFrame extends javax.swing.JFrame {
 			try {
 				switch(simulator) {
 				case TrafficJunction:
-					this.trafficConfigManager.setAttribute("userStrategyName", className);
+					this.trafficConfigManager.setAttribute("userStrategyCanonicalName", className);
 					break;
 
 				case OnlineCommunity:
-					this.onlineCommConfigManager.setAttribute("userStrategyName", className);
+					this.onlineCommConfigManager.setAttribute("userStrategyCanonicalName", className);
 					break;
 				}
 				this.strategy = 1;

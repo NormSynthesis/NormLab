@@ -55,7 +55,7 @@ public class BB_NormPerformancesDetector implements NormPerformancesDetector {
 		for(Goal goal : this.nsmSettings.getSystemGoals()) {
 			double topBoundary = (float)utility.getPerformanceRange(dim, goal).
 					getCurrentTopBoundary();
-			double satDegree = this.nsmSettings.getNormDeactivationBoundary(dim, goal);
+			double satDegree = this.nsmSettings.getNormDeactivationThreshold(dim, goal);
 
 			int minNumEvalsToClassify = this.nsmSettings.getMinEvaluationsToClassifyNorms();
 			int numValues = utility.getPerformanceRange(dim, goal).getNumPunctualValues();
@@ -86,7 +86,7 @@ public class BB_NormPerformancesDetector implements NormPerformancesDetector {
 		for(Goal goal : this.nsmSettings.getSystemGoals()) {
 			double bottomBoundary = utility.getPerformanceRange(dim, goal).
 					getCurrentBottomBoundary();
-			double satDegree = this.nsmSettings.getNormDeactivationBoundary(dim, goal);
+			double satDegree = this.nsmSettings.getNormDeactivationThreshold(dim, goal);
 
 			int minNumEvalsToClassify = this.nsmSettings.getMinEvaluationsToClassifyNorms();
 			int numValues = utility.getPerformanceRange(dim, goal).getNumPunctualValues();

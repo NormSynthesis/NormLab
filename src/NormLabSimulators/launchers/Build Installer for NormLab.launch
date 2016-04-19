@@ -12,7 +12,7 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.apache.tools.ant.launch.Launcher"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-buildfile &quot;${workspace_loc:NormLabSimulators}/installer/installation_coordinator.xml&quot; -DoutputInstallationFile=&quot;${file_prompt:the Installer Output File Name:normlab-1.0-setup.jar}&quot; -DEclipsePluginsDirectory=&quot;${eclipse_home}plugins&quot; -DGroovyHomeDirectory=&quot;${groovy_home}&quot; -DREPAST_VERSION=${REPAST_VERSION} -DNormSynthesisMachineDirectory=${workspace_loc:NormSynthesisMachine} -DRepastRuntimeDirectory=${workspace_loc:NormLabSimulators/lib/repast.simphony/classpath}"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-buildfile &quot;${workspace_loc:NormLabSimulators}/installer/installation_coordinator.xml&quot; -DoutputInstallationFile=&quot;${file_prompt:the Installer Output File Name:normlab-1.0-installer.jar}&quot; -DEclipsePluginsDirectory=&quot;${eclipse_home}plugins&quot; -DGroovyHomeDirectory=&quot;${groovy_home}&quot; -DREPAST_VERSION=${REPAST_VERSION} -DNormSynthesisMachineDirectory=${workspace_loc:NormSynthesisMachine} -DRepastRuntimeDirectory=${workspace_loc:NormLabSimulators/lib/repast.simphony/classpath}"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="NormLabSimulators"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xss10M -Xmx400M"/>
 </launchConfiguration>

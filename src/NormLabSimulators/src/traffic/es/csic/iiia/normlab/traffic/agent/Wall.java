@@ -6,29 +6,19 @@ package es.csic.iiia.normlab.traffic.agent;
  *
  */
 public class Wall implements TrafficElement {
-
-	/**
-	 * 
-	 */
-	private int x, y;
 	
 	/**
 	 * 
 	 * @param x
 	 * @param y
 	 */
-	public Wall(int x, int y)
-	{
-		this.x = x;
-		this.y = y;
-	}
+	public Wall(int x, int y){}
 	
 	/**
 	 * 
 	 */
 	@Override
 	public int getX() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -37,14 +27,10 @@ public class Wall implements TrafficElement {
 	 */
 	@Override
 	public int getY() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-  public void move() {
-	  // TODO Auto-generated method stub
-	  
-  }
+  public void move() {}
 
 }

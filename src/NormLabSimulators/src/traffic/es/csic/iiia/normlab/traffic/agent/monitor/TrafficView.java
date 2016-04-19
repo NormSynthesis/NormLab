@@ -8,7 +8,6 @@ import es.csic.iiia.normlab.traffic.agent.Collision;
 import es.csic.iiia.normlab.traffic.agent.TrafficElement;
 import es.csic.iiia.normlab.traffic.map.CarMap;
 import es.csic.iiia.normlab.traffic.map.TrafficMatrix;
-import es.csic.iiia.nsm.norm.Norm;
 import es.csic.iiia.nsm.sensing.View;
 
 /**
@@ -78,8 +77,7 @@ public class TrafficView extends TrafficMatrix implements View {
 	 * @param car
 	 * @return
 	 */
-	public void update(CarMap carMap)
-	{
+	public void update(CarMap carMap) {
 		this.clear();
 		
 		// Clear previous information and get sub matrix from car map
@@ -91,8 +89,8 @@ public class TrafficView extends TrafficMatrix implements View {
 			for(int col=startCol; col<=stopCol; col++) {
   			TrafficElement elem = carMap.getElement(row, col);
   			
-  			if(elem!=null)
-  			{//  				
+  			if(elem!=null) {
+  				
   				// Add agent id's and norm applicability
   				this.addAgentIds(elem);
   				this.addNormApplicability(elem);
@@ -173,18 +171,16 @@ public class TrafficView extends TrafficMatrix implements View {
 	 * 
 	 * @param state
 	 */
-	private void addNormApplicability(TrafficElement elem)
-	{
-		// Norm applicability for car
-		if(elem instanceof Car)
-		{
-			Car car = (Car)elem;
-			long id = car.getId();
-			List<Norm> appNorms = car.getReasoner().getApplicableNorms();
-			
+	private void addNormApplicability(TrafficElement elem) {
+
+//		if(elem instanceof Car)	{
+//			Car car = (Car)elem;
+//			long id = car.getId();
+//			List<Norm> appNorms = car.getReasoner().getApplicableNorms();
+//			
 //			FactFactory.generatePredicates(car.getReasoner().)
 //			NormsApplicableToPredicate nAppToPred = NormsApplicableToPredicate(predicate, appNorms);
 //			this.normApplicability.add(id, nAppToPred);
-		}
+//		}
 	}
 }

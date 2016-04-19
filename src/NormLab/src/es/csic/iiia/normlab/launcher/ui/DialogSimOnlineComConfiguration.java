@@ -3,6 +3,8 @@ package es.csic.iiia.normlab.launcher.ui;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -11,6 +13,8 @@ import javax.swing.event.DocumentListener;
 
 import es.csic.iiia.normlab.launcher.model.RepastXMLManager;
 import es.csic.iiia.normlab.launcher.onlinecomm.OnlineCommunityPopulation;
+import es.csic.iiia.normlab.launcher.utils.JDecimalField;
+import es.csic.iiia.normlab.launcher.utils.JIntegerField;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -88,6 +92,13 @@ public class DialogSimOnlineComConfiguration extends javax.swing.JDialog {
 	 * 
 	 */
 	private void saveConfig() throws Exception {
+		
+		NumberFormat format = NumberFormat.getInstance(Locale.US);
+
+		randomSeed = format.parse(randomSeed).toString();
+		contentQueueSize = format.parse(contentQueueSize).toString();
+		maxTicks = format.parse(maxTicks).toString();
+		
 		configManager.setAttribute("randomSeed", randomSeed);
 		configManager.setAttribute("contentQueueSize", contentQueueSize);
 		configManager.setAttribute("maxTicks", maxTicks);
@@ -144,15 +155,17 @@ public class DialogSimOnlineComConfiguration extends javax.swing.JDialog {
 	 */
 	private void btnChangePopulationActionPerformed(ActionEvent evt) {
 		DialogPopulationConfigurator dialog = 
-				new DialogPopulationConfigurator(parent, true);
+				new DialogPopulationConfigurator(parent, true, population);
 		
 		dialog.setLocationRelativeTo(this);
 		dialog.setVisible(true);
 		
 		try {
-	    OnlineCommunityPopulation population = dialog.getPopulation();
-	    configManager.setAttribute("population", population.getName());
-	    this.lblPopulationName.setText(population.getName());
+			if(dialog.userSaved()) {
+				OnlineCommunityPopulation population = dialog.getPopulation();
+		    configManager.setAttribute("population", population.getName());
+		    this.lblPopulationName.setText(population.getName());	
+			}
     }
 		catch (Exception e) {
 	    this.errorMsg("", e.getMessage());
@@ -183,14 +196,14 @@ public class DialogSimOnlineComConfiguration extends javax.swing.JDialog {
 	private void initComponents() {
 
 		lblTitle = new javax.swing.JLabel();
-		txtRandomSeed = new javax.swing.JTextField();
+		txtRandomSeed = new JIntegerField(0);
 		lblMaxSimTicks = new javax.swing.JLabel();
-		txtContentQueueSize = new javax.swing.JTextField();
+		txtContentQueueSize = new JIntegerField(1);
 		lblInfo = new javax.swing.JLabel();
 		lblContentQueueSize = new javax.swing.JLabel();
-		txtMaxSimTicks = new javax.swing.JTextField();
+		txtMaxSimTicks = new JIntegerField(1);
 		lblViolProb = new javax.swing.JLabel();
-		txtViolProb = new javax.swing.JTextField();
+		txtViolProb = new JDecimalField(2);
 		btnSave = new javax.swing.JButton();
 		btnExit = new javax.swing.JButton();
 		lblRandomSeed = new javax.swing.JLabel();
@@ -470,9 +483,9 @@ public class DialogSimOnlineComConfiguration extends javax.swing.JDialog {
 	private javax.swing.JLabel lblRandomSeed;
 	private javax.swing.JLabel lblTitle;
 	private javax.swing.JLabel lblViolProb;
-	private javax.swing.JTextField txtContentQueueSize;
-	private javax.swing.JTextField txtMaxSimTicks;
-	private javax.swing.JTextField txtRandomSeed;
-	private javax.swing.JTextField txtViolProb;
+	private JIntegerField txtContentQueueSize;
+	private JIntegerField txtMaxSimTicks;
+	private JIntegerField txtRandomSeed;
+	private JDecimalField txtViolProb;
 	// End of variables declaration//GEN-END:variables
 }

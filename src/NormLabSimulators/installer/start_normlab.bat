@@ -40,6 +40,8 @@ REM classes to load NormLab
 SET CP=%CP%;%NORMLAB_LIB%normlab-1.0.jar
 SET CP=%CP%;%NORMLAB_LIB%BrowserLauncher2-all-1_3.jar
 SET CP=%CP%;%NORMLAB_LIB%commons-io-2.4.jar
+SET CP=%CP%;%NORMLAB_LIB%opencsv-3.7.jar
+SET CP=%CP%;%NORMLAB_LIB%commons-lang3-3.4.jar
 
 REM classes and libraries of the Norm Synthesis Machine 
 SET CP=%CP%;%NSM_ROOT%bin

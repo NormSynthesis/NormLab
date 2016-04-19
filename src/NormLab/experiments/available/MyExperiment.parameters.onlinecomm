@@ -2,7 +2,7 @@
 
 	<!-- SIMULATOR SETTINGS -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="MyPopulation" displayName="Population to use" isReadOnly="false" name="population" type="string"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="MyPopulation2" displayName="Population to use" isReadOnly="false" name="population" type="string"/>
 	
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="Default Random Seed" isReadOnly="false" name="randomSeed" type="int"/>
 
@@ -142,10 +142,13 @@
 	<!-- Epsilon to compute the interval of values below which norms are considered not to be necessary enough to be part of the normative system -->
 	
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.025" displayName="NSM: Spec. threshold epsilon" isReadOnly="false" name="normNecDeactThresholdEpsilon" type="double"/>
-
 	
 	<!-- Minimum amount of evaluations required to decide if norm groups are effective -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="NSM: Norm groups min. evaluations classify" isReadOnly="false" name="normGroupsMinEvaluationsToDecide" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="1" displayName="NSM: Norm groups min. evaluations classify" isReadOnly="false" name="normGroupsMinEvaluationsToDecide" type="int"/>
+	
+	<!-- Name of the custom norm synthesis strategy -->
+	
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="user.strategies.CustomStrategy2" displayName="Custom strategy name" isReadOnly="false" name="customStrategyName" type="string"/>
 	
 </parameters>

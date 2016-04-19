@@ -13,7 +13,6 @@ import es.csic.iiia.nsm.norm.Norm;
 import es.csic.iiia.nsm.norm.evaluation.Utility;
 import es.csic.iiia.nsm.norm.evaluation.group.NormGroup;
 import es.csic.iiia.nsm.norm.evaluation.group.NormGroupCombination;
-import es.csic.iiia.nsm.norm.generation.NormGenerationMachine;
 import es.csic.iiia.nsm.norm.network.NetworkNodeState;
 import es.csic.iiia.nsm.norm.network.NormativeNetwork;
 import es.csic.iiia.nsm.norm.network.group.NormGroupNetwork;
@@ -39,7 +38,6 @@ public class GenericOperators {
 	protected GenericSynthesisStrategy strategy;	// the norm synthesis strategy
 	protected NormativeNetwork normativeNetwork;	// the normative network
 	protected NormGroupNetwork normGroupNetwork;	// the norm groups network
-	protected NormGenerationMachine genMachine;		// the norm generation machine
 	protected NormSynthesisSettings nsmSettings;	// norm synthesis settings
 	protected NormSynthesisMetrics nsMetrics;			// norm synthesis metrics
 	protected boolean pursueCompactness;					// perform norm generalisations?
@@ -228,6 +226,14 @@ public class GenericOperators {
 		}
 	}
 
+
+	/**
+	 * @param norm
+	 */
+  public void substitute(Norm norm) {
+	  this.normativeNetwork.setState(norm, NetworkNodeState.Substituted);
+  }
+  
 	/**
 	 * @param norm
 	 */

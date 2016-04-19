@@ -326,7 +326,7 @@ public class NormSynthesisMachine {
 		settings.setPursueLiberality(true);
 		settings.setNormGenerationApproach(Approach.Reactive);
 		settings.setMinEvaluationsToClassifyNorms(1);
-//	settings.setNormsDefaultUtility(0.5);
+//		settings.setNormsDefaultUtility(0.5);
 	}
 
 	/**
@@ -338,7 +338,7 @@ public class NormSynthesisMachine {
 		settings.setNormGenerationApproach(Approach.Deliberative);
 		settings.setPursueCompactness(true);
 		settings.setPursueLiberality(false);
-//		settings.setNormsDefaultUtility(0);
+		settings.setNormsDefaultUtility(0);
 	}
 
 	/**

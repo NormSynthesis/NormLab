@@ -1,11 +1,15 @@
 package es.csic.iiia.normlab.launcher.ui;
 
 import java.awt.HeadlessException;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import es.csic.iiia.normlab.launcher.model.RepastXMLManager;
+import es.csic.iiia.normlab.launcher.utils.JDecimalField;
+import es.csic.iiia.normlab.launcher.utils.JIntegerField;
 
 /**
  *
@@ -75,6 +79,15 @@ public class DialogSimTrafficConfiguration extends javax.swing.JDialog {
 	 * 
 	 */
 	private void saveConfig() throws Exception {
+		
+		NumberFormat format = NumberFormat.getInstance(Locale.US);
+
+		randomSeed = format.parse(randomSeed).toString();
+		newCarsFreq = format.parse(newCarsFreq).toString();
+		numCarsToAdd = format.parse(numCarsToAdd).toString();
+		maxTicks = format.parse(maxTicks).toString();
+		map = format.parse(map).toString();
+		
 		configManager.setAttribute("map", map);
 		configManager.setAttribute("randomSeed", randomSeed);
 		configManager.setAttribute("newCarsFreq", newCarsFreq);
@@ -145,21 +158,21 @@ public class DialogSimTrafficConfiguration extends javax.swing.JDialog {
 	private void initComponents() {
 
 		lblTitle = new javax.swing.JLabel();
-		txtNewCarsFreq = new javax.swing.JTextField();
+		txtNewCarsFreq = new JIntegerField(1);
 		lblNewCarsFreq = new javax.swing.JLabel();
-		txtNewCarsToAdd = new javax.swing.JTextField();
+		txtNewCarsToAdd = new JIntegerField(1);
 		lblCarsToAdd = new javax.swing.JLabel();
 		lblMapNumber = new javax.swing.JLabel();
-		txtMap = new javax.swing.JTextField();
+		txtMap = new JIntegerField(1,1);
 		lblViolProb = new javax.swing.JLabel();
-		txtViolProb = new javax.swing.JTextField();
+		txtViolProb = new JDecimalField(2);
 		btnSave = new javax.swing.JButton();
 		btnExit = new javax.swing.JButton();
 		lblRandomSeed = new javax.swing.JLabel();
-		txtRandomSeed = new javax.swing.JTextField();
+		txtRandomSeed = new JIntegerField(0);
 		lblMaxSimTicks = new javax.swing.JLabel();
 		lblInfo = new javax.swing.JLabel();
-		txtMaxSimTicks = new javax.swing.JTextField();
+		txtMaxSimTicks = new JIntegerField(1);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -491,11 +504,11 @@ public class DialogSimTrafficConfiguration extends javax.swing.JDialog {
 	private javax.swing.JLabel lblRandomSeed;
 	private javax.swing.JLabel lblTitle;
 	private javax.swing.JLabel lblViolProb;
-	private javax.swing.JTextField txtMap;
-	private javax.swing.JTextField txtMaxSimTicks;
-	private javax.swing.JTextField txtNewCarsFreq;
-	private javax.swing.JTextField txtNewCarsToAdd;
-	private javax.swing.JTextField txtRandomSeed;
-	private javax.swing.JTextField txtViolProb;
+	private JIntegerField txtMap;
+	private JIntegerField txtMaxSimTicks;
+	private JIntegerField txtNewCarsFreq;
+	private JIntegerField txtNewCarsToAdd;
+	private JIntegerField txtRandomSeed;
+	private JDecimalField txtViolProb;
 	// End of variables declaration//GEN-END:variables
 }

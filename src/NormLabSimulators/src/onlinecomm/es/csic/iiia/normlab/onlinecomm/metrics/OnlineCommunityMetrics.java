@@ -4,19 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.statistics.HistogramDataset;
 
 import es.csic.iiia.normlab.onlinecomm.config.OnlineCommunitySettings;
 import es.csic.iiia.normlab.onlinecomm.content.IContent;
@@ -24,12 +16,7 @@ import es.csic.iiia.normlab.onlinecomm.content.comment.SpamComment;
 import es.csic.iiia.normlab.onlinecomm.context.ContextData;
 import es.csic.iiia.normlab.onlinecomm.graphics.SlidingWindowMetric;
 import es.csic.iiia.nsm.NormSynthesisMachine;
-import es.csic.iiia.nsm.config.EvaluationCriteria;
-import es.csic.iiia.nsm.config.Goal;
 import es.csic.iiia.nsm.metrics.DefaultNormSynthesisMetrics;
-import es.csic.iiia.nsm.norm.Norm;
-import es.csic.iiia.nsm.norm.evaluation.Utility;
-import es.csic.iiia.nsm.norm.network.NormativeNetwork;
 
 /**
  * 
@@ -166,82 +153,82 @@ public class OnlineCommunityMetrics extends DefaultNormSynthesisMetrics {
 			this.saveFiles();
 		}
 
-		try {
-			//if(this.hasConverged()){	
-			if(this.hasNormativeSystemChangedThisTick()){
-				//    	if(this.hasNormativeNetworkChangedThisTick()) {
-
-				PrintStream ps = new PrintStream("output/onlinecomm/norms/NormGraph-"+tick+".txt");
-				PrintStream orig = System.out;
-				System.setOut(ps);
-
-				NormativeNetwork nNetwork = nsm.getNormativeNetwork();
-				Collection<Norm> actNorms = nNetwork.getActiveNorms();
-				for (Norm norm : actNorms){
-					Goal gComplaints = this.nsm.getNormSynthesisSettings().getSystemGoals().get(0);
-					Utility normUtility = nNetwork.getUtility(norm);
-					int nec = (int) (normUtility.getScore(EvaluationCriteria.Necessity, gComplaints) * 100); // Necessity
-					int level = nNetwork.getGeneralisationLevel(norm);
-					System.out.println("n:"+norm.getName()+"\t"+nec+"\t"+level+"\tActive");
-					List<Norm> parents = nNetwork.getParents(norm);
-					if(!parents.isEmpty()){
-						System.out.print("e:");
-						for (Norm parent : parents){
-							System.out.print(parent.getName()+" ");
-						}
-						System.out.println();
-					}	
-				}
-				Collection<Norm> inactNorms = nNetwork.getInactiveNorms();
-				boolean represented = false;
-
-				for (Norm norm : inactNorms){
-					norm = nNetwork.retrieveNorm(norm);
-					represented = nNetwork.isRepresented(norm);
-
-					Goal gComplaints = this.nsm.getNormSynthesisSettings().getSystemGoals().get(0);
-					Utility normUtility = nNetwork.getUtility(norm);
-					if(normUtility == null)
-						System.out.println();
-					int nec = (int) (normUtility.getScore(EvaluationCriteria.Necessity, gComplaints) * 100); // Necessity
-					int level = nNetwork.getGeneralisationLevel(norm);
-					if(represented){
-						System.out.println("n:"+norm.getName()+"\t"+nec+"\t"+level+"\tGeneralised");
-					}else{
-						System.out.println("n:"+norm.getName()+"\t"+nec+"\t"+level+"\tDiscarded");
-					}
-					List<Norm> parents = nNetwork.getParents(norm);
-					if(!parents.isEmpty()){
-						System.out.print("e:");
-						for (Norm parent : parents){
-							System.out.print(parent.getName()+" ");
-						}
-						System.out.println();
-					}	
-				}
-
-				System.setOut(orig);
-				ps.close();
-
-				// Para saber el estado de una norma (activo/inactivo)
-				// nNetwork.isActive(norm);
-
-				// Para saber las relaciones de una norma:
-				// 1. Padres
-				// nNetwork.getParents(norm);
-				// 2. Hijos
-				// nNetwork.getChildren(norm);
-
-				// Para saber la utilidad de una norma (para los pesos)
-				/*
-					Goal gComplaints = this.nsm.getNormSynthesisSettings().getSystemGoals().get(0);
-					Utility normUtility = nNetwork.getUtility(norm);
-					double eff = normUtility.getScore(Dimension.Effectiveness, gComplaints); // Effectiveness
-					double nec = normUtility.getScore(Dimension.Effectiveness, gComplaints); // Necessity
-				 */
-			}
-		} catch (IOException ex) {
-		}
+//		try {
+//			//if(this.hasConverged()){	
+//			if(this.hasNormativeSystemChangedThisTick()){
+//				//    	if(this.hasNormativeNetworkChangedThisTick()) {
+//
+//				PrintStream ps = new PrintStream("output/onlinecomm/norms/NormGraph-"+tick+".txt");
+//				PrintStream orig = System.out;
+//				System.setOut(ps);
+//
+//				NormativeNetwork nNetwork = nsm.getNormativeNetwork();
+//				Collection<Norm> actNorms = nNetwork.getActiveNorms();
+//				for (Norm norm : actNorms){
+//					Goal gComplaints = this.nsm.getNormSynthesisSettings().getSystemGoals().get(0);
+//					Utility normUtility = nNetwork.getUtility(norm);
+//					int nec = (int) (normUtility.getScore(EvaluationCriteria.Necessity, gComplaints) * 100); // Necessity
+//					int level = nNetwork.getGeneralisationLevel(norm);
+//					System.out.println("n:"+norm.getName()+"\t"+nec+"\t"+level+"\tActive");
+//					List<Norm> parents = nNetwork.getParents(norm);
+//					if(!parents.isEmpty()){
+//						System.out.print("e:");
+//						for (Norm parent : parents){
+//							System.out.print(parent.getName()+" ");
+//						}
+//						System.out.println();
+//					}	
+//				}
+//				Collection<Norm> inactNorms = nNetwork.getInactiveNorms();
+//				boolean represented = false;
+//
+//				for (Norm norm : inactNorms){
+//					norm = nNetwork.retrieveNorm(norm);
+//					represented = nNetwork.isRepresented(norm);
+//
+//					Goal gComplaints = this.nsm.getNormSynthesisSettings().getSystemGoals().get(0);
+//					Utility normUtility = nNetwork.getUtility(norm);
+//					if(normUtility == null)
+//						System.out.println();
+//					int nec = (int) (normUtility.getScore(EvaluationCriteria.Necessity, gComplaints) * 100); // Necessity
+//					int level = nNetwork.getGeneralisationLevel(norm);
+//					if(represented){
+//						System.out.println("n:"+norm.getName()+"\t"+nec+"\t"+level+"\tGeneralised");
+//					}else{
+//						System.out.println("n:"+norm.getName()+"\t"+nec+"\t"+level+"\tDiscarded");
+//					}
+//					List<Norm> parents = nNetwork.getParents(norm);
+//					if(!parents.isEmpty()){
+//						System.out.print("e:");
+//						for (Norm parent : parents){
+//							System.out.print(parent.getName()+" ");
+//						}
+//						System.out.println();
+//					}	
+//				}
+//
+//				System.setOut(orig);
+//				ps.close();
+//
+//				// Para saber el estado de una norma (activo/inactivo)
+//				// nNetwork.isActive(norm);
+//
+//				// Para saber las relaciones de una norma:
+//				// 1. Padres
+//				// nNetwork.getParents(norm);
+//				// 2. Hijos
+//				// nNetwork.getChildren(norm);
+//
+//				// Para saber la utilidad de una norma (para los pesos)
+//				/*
+//					Goal gComplaints = this.nsm.getNormSynthesisSettings().getSystemGoals().get(0);
+//					Utility normUtility = nNetwork.getUtility(norm);
+//					double eff = normUtility.getScore(Dimension.Effectiveness, gComplaints); // Effectiveness
+//					double nec = normUtility.getScore(Dimension.Effectiveness, gComplaints); // Necessity
+//				 */
+//			}
+//		} catch (IOException ex) {
+//		}
 
 		this.updateContentMetrics(timeStep);
 	}
@@ -340,37 +327,37 @@ public class OnlineCommunityMetrics extends DefaultNormSynthesisMetrics {
 	private void updateDataset(long tick, long stopTick) {}
 
 	private void crearHistograma(List<Double> viewComplaintRatios, List<Double> viewComplaintRatioWithoutNormViolation) {
-		HistogramDataset dataset = new HistogramDataset();
-
-		double[] v1 = new double[viewComplaintRatios.size()];
-		for(int i = 0 ; i < viewComplaintRatios.size() ; i++){
-			v1[i] = viewComplaintRatios.get(i)/100;
-		}
-		double[] v2 = new double[viewComplaintRatioWithoutNormViolation.size()];
-		for(int i = 0 ; i < viewComplaintRatioWithoutNormViolation.size() ; i++){
-			v2[i] = viewComplaintRatioWithoutNormViolation.get(i)/100;
-		}
-
-		int bin = 10;
-		dataset.addSeries("viewComplaintRatioViolation", v1, bin, 0, 1);
-		dataset.addSeries("ViewComplaintRatioNoViolation", v2, bin, 0 ,1);
-
-		String plotTitle = "Histogram";
-		String xaxis = "Ratio";
-		String yaxis = "Contents";
-		PlotOrientation orientation = PlotOrientation.VERTICAL;
-		boolean show = true;
-		boolean toolTips = false;
-		boolean urls = false;
-		JFreeChart chart = ChartFactory.createHistogram(plotTitle, xaxis,
-				yaxis, dataset, orientation, show, toolTips, urls);
-		int width = 800;
-		int height = 800;
-		try {
-			ChartUtilities.saveChartAsPNG(new File("histogram.png"), chart,
-					width, height);
-		} catch (IOException e) {
-		}
+//		HistogramDataset dataset = new HistogramDataset();
+//
+//		double[] v1 = new double[viewComplaintRatios.size()];
+//		for(int i = 0 ; i < viewComplaintRatios.size() ; i++){
+//			v1[i] = viewComplaintRatios.get(i)/100;
+//		}
+//		double[] v2 = new double[viewComplaintRatioWithoutNormViolation.size()];
+//		for(int i = 0 ; i < viewComplaintRatioWithoutNormViolation.size() ; i++){
+//			v2[i] = viewComplaintRatioWithoutNormViolation.get(i)/100;
+//		}
+//
+//		int bin = 10;
+//		dataset.addSeries("viewComplaintRatioViolation", v1, bin, 0, 1);
+//		dataset.addSeries("ViewComplaintRatioNoViolation", v2, bin, 0 ,1);
+//
+//		String plotTitle = "Histogram";
+//		String xaxis = "Ratio";
+//		String yaxis = "Contents";
+//		PlotOrientation orientation = PlotOrientation.VERTICAL;
+//		boolean show = true;
+//		boolean toolTips = false;
+//		boolean urls = false;
+//		JFreeChart chart = ChartFactory.createHistogram(plotTitle, xaxis,
+//				yaxis, dataset, orientation, show, toolTips, urls);
+//		int width = 800;
+//		int height = 800;
+//		try {
+//			ChartUtilities.saveChartAsPNG(new File("histogram.png"), chart,
+//					width, height);
+//		} catch (IOException e) {
+//		}
 	}
 
 	/**

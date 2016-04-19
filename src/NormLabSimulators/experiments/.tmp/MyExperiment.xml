@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><configuration>
+    <parameter defaultValue="MyExperiment" name="name"/>
+<parameter defaultValue="OnlineCommunity" name="simulator"/>
+<parameter defaultValue="7" name="strategy"/>
+<parameter defaultValue="10" name="simulations"/>
+<parameter defaultValue="false" name="computeAvgs"/>
+<parameter defaultValue="false" name="computeMeans"/>
+<parameter defaultValue="false" name="createCharts"/>
+</configuration>
