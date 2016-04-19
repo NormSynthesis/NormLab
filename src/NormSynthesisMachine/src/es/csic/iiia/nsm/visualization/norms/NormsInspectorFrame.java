@@ -14,7 +14,12 @@ import es.csic.iiia.nsm.visualization.NormSynthesisInspector;
  */
 public class NormsInspectorFrame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8461523318209987162L;
 	private NormsInspectorPanel inspectorPanel;
+	
 	/**
 	 * 
 	 * @param nsInspector

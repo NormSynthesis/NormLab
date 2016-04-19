@@ -26,7 +26,7 @@ public class CBRPanel extends JPanel implements TreeSelectionListener
 	 */
 	private static final long serialVersionUID = -3831394315649334241L;
 	
-	private JComboBox boxScores;
+	private JComboBox<String> boxScores;
 	private JLabel lblCaseDescription;
 	private JLabel lblEffectiveness;
 	private JLabel lblNecessity;
@@ -92,7 +92,7 @@ public class CBRPanel extends JPanel implements TreeSelectionListener
 		lblCaseDescription = new JLabel();
 		lblTreeCases = new JLabel();
 		lblSolution = new JLabel();
-		boxScores = new JComboBox();
+		boxScores = new JComboBox<String>();
 		lblNecessity = new JLabel();
 		pbNecessity = new JProgressBar();
 		lblNorms = new JLabel();

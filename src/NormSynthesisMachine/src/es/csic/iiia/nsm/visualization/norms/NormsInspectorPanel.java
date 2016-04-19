@@ -593,7 +593,7 @@ public class NormsInspectorPanel extends javax.swing.JPanel {
 
 		setBackground(java.awt.Color.lightGray);
 
-		String loupePath = miscPath + "magnifGlass.png";
+//		String loupePath = miscPath + "magnifGlass.png";
 		String chartPath = miscPath + "chart.png";
 		
 		lblTitle.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N

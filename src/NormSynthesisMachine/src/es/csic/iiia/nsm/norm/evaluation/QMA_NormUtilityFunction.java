@@ -29,7 +29,7 @@ public class QMA_NormUtilityFunction implements NormUtilityFunction {
 	//---------------------------------------------------------------------------
 
 	private Map<Norm, List<SetOfPredicatesWithTerms>> negRewardedNorms;
-	private NormSynthesisMetrics nsMetrics;
+//	private NormSynthesisMetrics nsMetrics;
 	
 	//---------------------------------------------------------------------------
 	// Methods 
@@ -40,7 +40,7 @@ public class QMA_NormUtilityFunction implements NormUtilityFunction {
 	 */
 	public QMA_NormUtilityFunction(NormSynthesisMetrics nsMetrics) {
 		this.negRewardedNorms = new HashMap<Norm, List<SetOfPredicatesWithTerms>>();
-		this.nsMetrics = nsMetrics;
+//		this.nsMetrics = nsMetrics;
 	}
 
 	/**

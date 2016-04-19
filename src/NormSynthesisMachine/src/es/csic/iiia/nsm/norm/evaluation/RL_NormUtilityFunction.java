@@ -26,7 +26,7 @@ public class RL_NormUtilityFunction implements NormUtilityFunction {
 	//---------------------------------------------------------------------------
 
 	private Map<Norm, List<SetOfPredicatesWithTerms>> negRewardedNorms;
-	private NormSynthesisMetrics nsMetrics;
+//	private NormSynthesisMetrics nsMetrics;
 	private double alpha;
 	
 	//---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ public class RL_NormUtilityFunction implements NormUtilityFunction {
 	 */
 	public RL_NormUtilityFunction(NormSynthesisMetrics nsMetrics, double alpha) {
 		this.negRewardedNorms = new HashMap<Norm, List<SetOfPredicatesWithTerms>>();
-		this.nsMetrics = nsMetrics;
+//		this.nsMetrics = nsMetrics;
 		this.alpha = alpha;
 	}
 

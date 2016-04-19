@@ -169,5 +169,6 @@
 	<classpathentry kind="lib" path="lib/repast.simphony/buildpath/xstream-1.4.7.jar"/>
 	<classpathentry kind="lib" path="lib/BrowserLauncher2-all-1_3.jar"/>
 	<classpathentry kind="lib" path="lib/repast.simphony/repast.simphony.bin_and_src.jar"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
