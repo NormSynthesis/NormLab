@@ -116,14 +116,14 @@ public class GenericOperators {
 	}
 
 	/**
-	 * Hibernates a given {@code norm} in the normative network
-	 * by setting its state to "hibernated"  
+	 * Proposes a given {@code norm} in the normative network
+	 * by setting its state to "candidate"  
 	 * 
-	 * @param norm the norm to hibernate
+	 * @param norm the norm to propose
 	 */
-	public void hibernate(Norm norm) {
+	public void propose(Norm norm) {
 		if(this.normativeNetwork.getState(norm) == NetworkNodeState.Created) {
-			this.normativeNetwork.setState(norm, NetworkNodeState.Hibernated);
+			this.normativeNetwork.setState(norm, NetworkNodeState.Candidate);
 		}
 	}
 

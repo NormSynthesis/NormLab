@@ -1,6 +1,5 @@
 package es.csic.iiia.normlab.traffic;
 
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,9 @@ import es.csic.iiia.normlab.traffic.metrics.TrafficMetrics;
 import es.csic.iiia.normlab.traffic.normsynthesis.TrafficDomainFunctions;
 import es.csic.iiia.normlab.visualization.MessageConsole;
 import es.csic.iiia.normlab.visualization.NormLabConsole;
+import es.csic.iiia.normlab.visualization.NormLabInspector;
 import es.csic.iiia.nsm.IncorrectSetupException;
+import es.csic.iiia.nsm.NormSynthesisMachine;
 import es.csic.iiia.nsm.agent.language.PredicatesDomains;
 import es.csic.iiia.nsm.agent.language.TaxonomyOfTerms;
 import es.csic.iiia.nsm.config.DomainFunctions;
@@ -59,6 +60,7 @@ public class TrafficSimulator implements TrafficElement {
 	private static CarContextFactory carContextFactory;
 	private static TrafficSimulatorSettings simSettings;
 	private static TrafficNormSynthesisSettings nsSettings;
+
 	private static long tick = 0;
 
 	//-----------------------------------------------------------------
@@ -69,7 +71,11 @@ public class TrafficSimulator implements TrafficElement {
 	private TrafficNSAgent normSynthesisAgent;
 	private TrafficMetrics trafficMetrics;
 	private List<TrafficCamera> trafficCameras;
-
+	
+	private NormLabInspector nInspector;
+	
+	private boolean useGui;
+	
 	//-----------------------------------------------------------------
 	// Methods
 	//-----------------------------------------------------------------
@@ -83,8 +89,8 @@ public class TrafficSimulator implements TrafficElement {
 	 * @param map
 	 * @throws Exception 
 	 */
-	public TrafficSimulator(Context<TrafficElement> context, Grid<TrafficElement> map) 
-			throws Exception {
+	public TrafficSimulator(Context<TrafficElement> context, 
+			Grid<TrafficElement> map) throws Exception {
 
 		/* Load simulator settings and norm synthesis settings */
 		simSettings = new TrafficSimulatorSettings();
@@ -111,10 +117,21 @@ public class TrafficSimulator implements TrafficElement {
 		this.createNormSynthesisStuff();
 
 		/* Create traffic metrics */
-		this.trafficMetrics = (TrafficMetrics) this.normSynthesisAgent.getMetrics();
+		this.trafficMetrics = 
+				(TrafficMetrics) this.normSynthesisAgent.getMetrics();
 
-		/* Show console and redirect output */
-		this.redirectOutput();
+		NormSynthesisMachine nsm = 
+				this.normSynthesisAgent.getNormSynthesisMachine();
+		
+		/* Create the GUI if required) */
+		this.useGui = !RunEnvironment.getInstance().isBatch();
+		if(this.useGui) {
+			
+			/* Redirect output and show norms inspector */
+			NormLabConsole console = this.redirectOutput();
+			this.nInspector = new NormLabInspector(nsm, console);
+			this.nInspector.show();
+		}
 		
 		System.out.println("\nStarting simulation with random seed = " + seed);
 	}
@@ -122,23 +139,20 @@ public class TrafficSimulator implements TrafficElement {
 	/**
 	 * 
 	 */
-	private void redirectOutput() {
+	private NormLabConsole redirectOutput() {
+		final NormLabConsole consoleFrame = new NormLabConsole();
+		consoleFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		
+		/* Redirect output */
 		if(!RunEnvironment.getInstance().isBatch()) {
 			Runnable runnable = new Runnable() {
 				public void run() {
-					final NormLabConsole frame = new NormLabConsole();
-					frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-					frame.setVisible(true);
-					
-					/* Redirect output */
-					MessageConsole mc = new MessageConsole(frame.getConsole());
-					mc.redirectOut();
-					mc.redirectErr(Color.RED, null);
+					new MessageConsole(consoleFrame.getConsole());
 				}
 			};
 			EventQueue.invokeLater(runnable);	
 		}
+		return consoleFrame;
   }
 
 	/**
@@ -178,21 +192,16 @@ public class TrafficSimulator implements TrafficElement {
 			carMap.makeCarsPerceive();
 		}
 
-		//		this.trafficMetrics.update();
-
-		// Step resume
-		//		this.printStepResume();
-
-		//		System.out.println("\n======================= End Step ========================\n");
-
+		/* Display metrics */
+		if(this.useGui) {
+			nInspector.refresh();
+		}
+		
 		// Stop simulation if required update
-		if(tick >= simSettings.getMaxTicks() || this.mustStop())
-		{
+		if(tick >= simSettings.getMaxTicks() || this.mustStop()) {
 			System.out.println("End of simulation");
-			RunEnvironment.getInstance().endRun();
-
-			//			trafficMetrics.print();
 			trafficMetrics.save();
+			RunEnvironment.getInstance().endRun();
 		}
 	}
 

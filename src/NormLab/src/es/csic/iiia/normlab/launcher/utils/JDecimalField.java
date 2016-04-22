@@ -22,7 +22,8 @@ public class JDecimalField extends JFormattedTextField {
 	 * @param iMaxLen
 	 * @param iFormat
 	 */
-	public JDecimalField(final int iMaxLen) {
+	public JDecimalField(final int iMaxLen, final double minimum, 
+			final double maximum) {
 
 		this.setFormatterFactory(new AbstractFormatterFactory() {
 
@@ -35,8 +36,8 @@ public class JDecimalField extends JFormattedTextField {
 				format.setRoundingMode(RoundingMode.HALF_UP);
 				InternationalFormatter formatter = new InternationalFormatter(format);
 				formatter.setAllowsInvalid(false);
-				formatter.setMinimum(0.0);
-				formatter.setMaximum(1.00);
+				formatter.setMinimum(minimum);
+				formatter.setMaximum(maximum);
 				
 				return formatter;
 			}

@@ -50,7 +50,7 @@
 		 6 = LION
 		 7 = DESMON) -->
 		 
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="5" displayName="NSM: Norm synthesis strategy" isReadOnly="false" name="normSynthesisStrategy" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="6" displayName="NSM: Norm synthesis strategy" isReadOnly="false" name="normSynthesisStrategy" type="int"/>
 	
 	<!-- Norm synthesis example 
 		1 = No norms rule the MAS. No norm synthesis. 
@@ -67,7 +67,7 @@
 	
 	<!-- Should the NSM exploit norm synergies to pursue normative systems' liberality? -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" defaultValue="false" displayName="Exploit norm synergies to pursue liberality?" isReadOnly="false" name="pursueLiberality" type="boolean"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter" defaultValue="true" displayName="Exploit norm synergies to pursue liberality?" isReadOnly="false" name="pursueLiberality" type="boolean"/>
 	
 	<!-- Num ticks of stability required to converge -->
 	
@@ -80,7 +80,7 @@
 		 0 = use reinforcement learning and Bollinger Bands
 		 1 = with cumulative moving average -->
 		 
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="Norm evaluation mechanism" isReadOnly="false" name="normEvaluationMechanism" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="1" displayName="Norm evaluation mechanism" isReadOnly="false" name="normEvaluationMechanism" type="int"/>
 	
 	<!-- Norm evaluation learning rate -->
 					
@@ -153,7 +153,7 @@
 	
 	<!-- Minimum amount of evaluations required to decide if norm groups are effective -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="NSM: Norm groups min. evaluations classify" isReadOnly="false" name="normGroupsMinEvaluationsToDecide" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="25" displayName="NSM: Norm groups min. evaluations classify" isReadOnly="false" name="normGroupsMinEvaluationsToDecide" type="int"/>
 
 	<!-- Name of the user's self-made norm synthesis strategy -->
 	

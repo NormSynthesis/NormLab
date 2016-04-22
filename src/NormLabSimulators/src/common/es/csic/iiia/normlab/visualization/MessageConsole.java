@@ -33,23 +33,23 @@ public class MessageConsole {
 	 * @param textComponent
 	 */
 	public MessageConsole(JTextComponent textComponent)	{
-		this(textComponent, true);
+		this.setConsole(textComponent);
 	}
 
-	/*
-	 *	Use the text component specified as a simply console to display
-	 *  text messages.
-	 *
-	 *  The messages can either be appended to the end of the console or
-	 *  inserted as the first line of the console.
+	/**
+	 * 
+	 * @param textComponent
 	 */
-	public MessageConsole(JTextComponent textComponent, boolean isAppend)	{
+	public void setConsole(JTextComponent textComponent) {
 		this.textComponent = textComponent;
 		this.document = textComponent.getDocument();
-		this.isAppend = isAppend;
+		this.isAppend = true;
 		textComponent.setEditable(false);
+		
+		this.redirectOut();
+		this.redirectErr(Color.RED, null);
 	}
-
+	
 	/*
 	 *  Redirect the output from the standard output to the console
 	 *  using the default text color and null PrintStream

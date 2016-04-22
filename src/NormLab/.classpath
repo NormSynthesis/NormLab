@@ -17,7 +17,6 @@
 	<classpathentry kind="lib" path="lib/BrowserLauncher2-all-1_3.jar"/>
 	<classpathentry kind="lib" path="/NormLabSimulators/lib/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="/NormLabSimulators/lib/repast.simphony/buildpath/saf.core.ui.jar"/>
-	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="lib" path="lib/opencsv-3.7.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>

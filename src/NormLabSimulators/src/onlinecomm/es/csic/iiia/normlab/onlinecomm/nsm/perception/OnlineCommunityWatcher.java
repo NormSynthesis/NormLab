@@ -50,7 +50,7 @@ public class OnlineCommunityWatcher implements Sensor {
 		List<IContent> actualComplaintList = contextData.getActualComplaintList();
 		
 		for(IContent c : actualUploadList){
-			actualUploads.add(c);
+//			actualUploads.add(c);
 		}
 		
 		/* TODO: Aqui hay que mirar como se hace lo del fake upload en 

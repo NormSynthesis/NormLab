@@ -1,5 +1,6 @@
 package es.csic.iiia.normlab.onlinecomm.context;
 
+import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 
 import repast.simphony.context.Context;
@@ -50,6 +52,10 @@ import es.csic.iiia.normlab.onlinecomm.nsm.perception.OnlineCommunityWatcher;
 import es.csic.iiia.normlab.onlinecomm.section.SectionForum;
 import es.csic.iiia.normlab.onlinecomm.section.SectionPhotoVideo;
 import es.csic.iiia.normlab.onlinecomm.section.SectionTheReporter;
+import es.csic.iiia.normlab.visualization.MessageConsole;
+import es.csic.iiia.normlab.visualization.NormLabConsole;
+import es.csic.iiia.normlab.visualization.NormLabInspector;
+import es.csic.iiia.nsm.NormSynthesisMachine;
 import es.csic.iiia.nsm.agent.language.PredicatesDomains;
 import es.csic.iiia.nsm.config.DomainFunctions;
 import es.csic.iiia.nsm.config.NormSynthesisSettings;
@@ -80,6 +86,7 @@ public class OnlineCommunityContextCreator implements ContextBuilder<Object> {
 	private long rndSeed;
 	
 	private OnlineCommunityNSAgent nsAgent;
+	private NormLabInspector nInspector;
 
 	/**
 	 * Method that is called from repast when you start the simulation (Our MAIN).
@@ -158,9 +165,39 @@ public class OnlineCommunityContextCreator implements ContextBuilder<Object> {
 		/* Set simulation stop tick */
 		RunEnvironment.getInstance().endAt(ocSettings.getMaxTicks());
 
+		/* Create the GUI if required) */
+		NormSynthesisMachine nsm = this.nsAgent.getNormSynthesisMachine();
+		boolean useGui = !RunEnvironment.getInstance().isBatch();
+		if(useGui) {
+			
+			/* Redirect output and show norms inspector */
+			NormLabConsole console = this.redirectOutput();
+			this.nInspector = new NormLabInspector(nsm, console);
+			this.ocManager.setNormsInspector(nInspector);
+			this.nInspector.show();
+		}
+		
 		return context;
 	}
 
+	/**
+	 * 
+	 */
+	private NormLabConsole redirectOutput() {
+		final NormLabConsole consoleFrame = new NormLabConsole();
+		consoleFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		
+		/* Redirect output */
+		if(!RunEnvironment.getInstance().isBatch()) {
+			Runnable runnable = new Runnable() {
+				public void run() {
+					new MessageConsole(consoleFrame.getConsole());
+				}
+			};
+			EventQueue.invokeLater(runnable);	
+		}
+		return consoleFrame;
+  }
 	/**
 	 * 
 	 */

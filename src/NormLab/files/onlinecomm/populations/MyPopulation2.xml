@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
 <agents>
     <agent>
-        <quantity>7</quantity>
+        <quantity>1</quantity>
         <name>moderate</name>
         <correct>1.0</correct>
         <insult>0.0</insult>
@@ -21,7 +21,7 @@
         <populationName>MyPopulation2</populationName>
     </agent>
     <agent>
-        <quantity>3</quantity>
+        <quantity>1</quantity>
         <name>spammer</name>
         <correct>0.0</correct>
         <insult>0.0</insult>
@@ -41,7 +41,7 @@
         <populationName>MyPopulation2</populationName>
     </agent>
     <agent>
-        <quantity>0</quantity>
+        <quantity>1</quantity>
         <name>pornographic</name>
         <correct>0.0</correct>
         <insult>0.0</insult>
@@ -61,7 +61,7 @@
         <populationName>MyPopulation2</populationName>
     </agent>
     <agent>
-        <quantity>0</quantity>
+        <quantity>1</quantity>
         <name>violent</name>
         <correct>0.0</correct>
         <insult>0.0</insult>
@@ -81,7 +81,7 @@
         <populationName>MyPopulation2</populationName>
     </agent>
     <agent>
-        <quantity>0</quantity>
+        <quantity>1</quantity>
         <name>rude</name>
         <correct>0.0</correct>
         <insult>1.0</insult>

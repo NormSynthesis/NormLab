@@ -318,7 +318,7 @@ public class TrafficNSExample5_NSStrategy implements NormSynthesisStrategy {
 
 		for(Norm n : normsApplicable.getApplicableNorms()) {
 			if(this.normativeNetwork.isRepresented(n) || 
-					this.normativeNetwork.getState(n) == NetworkNodeState.Hibernated) {
+					this.normativeNetwork.getState(n) == NetworkNodeState.Candidate) {
 				return true;
 			}
 		}

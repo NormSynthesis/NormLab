@@ -54,7 +54,7 @@ public class DialogPopulationConfigurator extends JDialog {
 	/* */
 	private static final long serialVersionUID = 8476544015656480598L;
 	private static String populationName;
-	
+
 	/* */
 	private String availablePopsDir = "files/onlinecomm/populations/";
 	private String patternPopsDir = "files/onlinecomm/populations/.pattern/";
@@ -74,44 +74,50 @@ public class DialogPopulationConfigurator extends JDialog {
 	private String complainPornKey = "complainPorn";
 	private String complainViolentKey = "complainViolent";
 	private String complainInsultKey = "complainInsult";
-	
+
 	private Map<UserType, Map<String, String>> uploadProfile;
 	private Map<UserType, Map<String, String>> viewProfile;
 	private Map<UserType, Map<String, String>> complainProfile;
-	
+
 	private String numModerates;
 	private String numSpammers;
 	private String numPornographics;
 	private String numViolents;
 	private String numRudes;
-	
+
 	private List<UserType> userTypes;
 	private UserType userType;
-	
+
 	private boolean userSaved;
-	
+
 	/**
 	 * Creates new form DialogChoosePopulation
 	 * @param population2 
 	 */
 	public DialogPopulationConfigurator(Frame parent, boolean modal,
 			String population) {
-		
+
 		super(parent, modal);
 		this.prepareDataStructures();
-		
+
 		initComponents();
 		setResizable(false);
 
 		populationName = population;
-		this.loadAvailablePopulations();
-		if(!population.equals("")) {
-			this.cbAvailablePop.setSelectedItem(population);
+
+		try {
+			this.loadAvailablePopulations();
+			if(!population.equals("")) {
+				this.cbAvailablePop.setSelectedItem(population);
+			}
 		}
-		
+		catch(Exception e) {
+			this.errorMsg("Error loading populations", e.getMessage());
+		}
+
 		userSaved = false;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -119,7 +125,7 @@ public class DialogPopulationConfigurator extends JDialog {
 	public boolean userSaved() {
 		return this.userSaved;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -133,14 +139,14 @@ public class DialogPopulationConfigurator extends JDialog {
 	 */
 	private void prepareDataStructures() {
 		this.userType = UserType.Moderate;
-		
+
 		this.userTypes = new ArrayList<UserType>();
 		this.userTypes.add(UserType.Moderate);
 		this.userTypes.add(UserType.Spammer);
 		this.userTypes.add(UserType.Pornographic);
 		this.userTypes.add(UserType.Violent);
 		this.userTypes.add(UserType.Rude);
-		
+
 		this.uploadProfile = new HashMap<UserType, Map<String, String>>();
 		this.viewProfile = new HashMap<UserType, Map<String, String>>();
 		this.complainProfile = new HashMap<UserType, Map<String, String>>();	  
@@ -167,21 +173,25 @@ public class DialogPopulationConfigurator extends JDialog {
 	}
 
 	/**
+	 * @throws Exception 
 	 * 
 	 */
-	private void loadAvailablePopulations() {
+	private void loadAvailablePopulations() throws Exception {
 		File avPopsFolder = new File (availablePopsDir);
 		List<File> availablePops = Arrays.asList(avPopsFolder.listFiles(
 				new FilenameFilter() {
-					
-			public boolean accept(File directory, String fileName) {
-				return fileName.endsWith(".xml");
-			}    
-		}));
+
+					public boolean accept(File directory, String fileName) {
+						return fileName.endsWith(".xml");
+					}    
+				}));
 
 		/* If there are no available populations, create a new one */
 		if(availablePops.isEmpty()) {
 			this.createNewPopulation();
+			this.savePopulation();
+			this.displayPopulationConfig();
+			this.cbAvailablePop.addItem(population.getName());	
 		}
 
 		/* Otherwise, retrieve available populations */
@@ -202,13 +212,13 @@ public class DialogPopulationConfigurator extends JDialog {
 	private void createNewPopulation() {
 		try {
 			this.loadPopulation(patternPopsDir,	"emptyPopulation");
-			this.displayPopulationConfig();
+
 		}
 		catch (Exception e) {
 			this.errorMsg("Error while creating new population", e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param population
@@ -219,18 +229,18 @@ public class DialogPopulationConfigurator extends JDialog {
 
 		this.population = new OnlineCommunityPopulation(populationDir, 
 				populationName + ".xml");
-		
+
 		populationName = population.getName();
 		this.numModerates = String.valueOf(population.getNumUsers(UserType.Moderate));
 		this.numSpammers = String.valueOf(population.getNumUsers(UserType.Spammer));
 		this.numPornographics = String.valueOf(population.getNumUsers(UserType.Pornographic));
 		this.numViolents = String.valueOf(population.getNumUsers(UserType.Violent));
 		this.numRudes = String.valueOf(population.getNumUsers(UserType.Rude));
-		
+
 		for(UserType usrType : this.userTypes) {
 
 			UploadProfile upProfile = this.population.getUploadProfile(usrType);
-			
+
 			this.uploadProfile.get(usrType).put(uploadFreqKey, 
 					String.valueOf(upProfile.getUploadProbability()));
 			this.uploadProfile.get(usrType).put(uploadCorrectKey, 
@@ -243,9 +253,9 @@ public class DialogPopulationConfigurator extends JDialog {
 					String.valueOf(upProfile.getViolent()));
 			this.uploadProfile.get(usrType).put(uploadInsultKey, 
 					String.valueOf(upProfile.getInsult()));
-			
+
 			ViewProfile vProfile = this.population.getViewProfile(usrType);
-			
+
 			this.viewProfile.get(usrType).put(viewForumKey, 
 					String.valueOf(vProfile.getForum()));
 			this.viewProfile.get(usrType).put(viewTheReporterKey, 
@@ -254,9 +264,9 @@ public class DialogPopulationConfigurator extends JDialog {
 					String.valueOf(vProfile.getPhotoVideo()));
 			this.viewProfile.get(usrType).put(viewModeKey, 
 					String.valueOf(vProfile.getViewMode()));
-			
+
 			ComplaintProfile cpProfile = this.population.getComplainProfile(usrType);
-			
+
 			this.complainProfile.get(usrType).put(complainSpamKey,
 					String.valueOf(cpProfile.getSpam()));
 			this.complainProfile.get(usrType).put(complainPornKey,
@@ -283,10 +293,10 @@ public class DialogPopulationConfigurator extends JDialog {
 		this.population.setNumUsers(UserType.Pornographic, Integer.valueOf(this.numPornographics));
 		this.population.setNumUsers(UserType.Violent, Integer.valueOf(this.numViolents));
 		this.population.setNumUsers(UserType.Rude, Integer.valueOf(this.numRudes));
-		
+
 		for(UserType usrType : this.userTypes) {
 			UploadProfile upProfile = this.population.getUploadProfile(usrType);
-			
+
 			upProfile.setUploadProbability(Double.valueOf(
 					this.uploadProfile.get(usrType).get(uploadFreqKey)));
 			upProfile.setCorrect(Double.valueOf(
@@ -309,7 +319,7 @@ public class DialogPopulationConfigurator extends JDialog {
 					this.viewProfile.get(usrType).get(viewMultimediaKey)));
 			vProfile.setViewMode(Integer.valueOf(
 					this.viewProfile.get(usrType).get(viewModeKey)));
-			
+
 			ComplaintProfile cpProfile = this.population.getComplainProfile(usrType);
 			cpProfile.setSpam(Double.valueOf(
 					this.complainProfile.get(usrType).get(complainSpamKey)));
@@ -323,8 +333,31 @@ public class DialogPopulationConfigurator extends JDialog {
 
 		/* Finally save population to XML */
 		this.population.saveToXML(availablePopsDir, population.getName() + ".xml");
-		
+
 		this.userSaved = true;
+	}
+
+	/**
+	 * 
+	 */
+	private void deletePopulation() {
+		int dialogButton = JOptionPane.YES_NO_OPTION;
+		int dialogResult = JOptionPane.showConfirmDialog(this, 
+				"Do you really want to delete the selected population?", 
+				"Delete population?", 
+				dialogButton);
+
+		if(dialogResult == 0) {
+			File toDelete = new File(availablePopsDir + population.getName() + ".xml");
+
+			if(toDelete.delete()) {
+				this.cbAvailablePop.removeItem(population.getName());
+			}
+			else {
+				this.errorMsg("Error while deleting population",
+						"There was an unexpected error while deleting the population");
+			}
+		} 
 	}
 
 	/**
@@ -358,7 +391,7 @@ public class DialogPopulationConfigurator extends JDialog {
 		this.txtUploadPorn.setText(String.valueOf(uploadProfile.get(type).get(uploadPornKey)));
 		this.txtUploadViolent.setText(String.valueOf(uploadProfile.get(type).get(uploadViolentKey)));
 		this.txtUploadInsult.setText(String.valueOf(uploadProfile.get(type).get(uploadInsultKey)));
-		
+
 		this.txtViewForum.setText(String.valueOf(viewProfile.get(type).get(viewForumKey)));
 		this.txtViewTheReporter.setText(String.valueOf(viewProfile.get(type).get(viewTheReporterKey)));
 		this.txtViewMultimedia.setText(String.valueOf(viewProfile.get(type).get(viewMultimediaKey)));
@@ -414,7 +447,14 @@ public class DialogPopulationConfigurator extends JDialog {
 	 * @param evt
 	 */
 	private void btnCreatePopActionPerformed(java.awt.event.ActionEvent evt) {
-		this.createNewPopulation();
+
+		try {
+			this.createNewPopulation();
+			this.displayPopulationConfig();
+		}
+		catch (Exception e) {
+			this.errorMsg("Error while creating population", e.getMessage());
+		}
 	}
 
 	/**
@@ -423,9 +463,20 @@ public class DialogPopulationConfigurator extends JDialog {
 	 */
 	private void cbAvailablePopActionPerformed(java.awt.event.ActionEvent evt) {
 		String population = (String)this.cbAvailablePop.getSelectedItem();
-
+		
 		try {
-			this.loadPopulation(availablePopsDir, population);
+
+			/* There is no population */
+			if(population == null) {
+				this.createNewPopulation();
+				this.cbAvailablePop.addItem(this.population.getName());
+				this.cbAvailablePop.setSelectedItem(this.population.getName());
+			}
+			/* A population is selected */
+			else {
+				this.loadPopulation(availablePopsDir, population);
+			}
+
 			this.displayPopulationConfig();
 		}
 		catch (Exception e) {
@@ -443,9 +494,9 @@ public class DialogPopulationConfigurator extends JDialog {
 		this.userType = type;
 
 		try {
-//			UploadProfile upProfile = population.getUploadProfile(type);
-//			ViewProfile vProfile = population.getViewProfile(type);
-//			ComplaintProfile cpProfile = population.getComplainProfile(type);
+			//			UploadProfile upProfile = population.getUploadProfile(type);
+			//			ViewProfile vProfile = population.getViewProfile(type);
+			//			ComplaintProfile cpProfile = population.getComplainProfile(type);
 
 			this.displayUserProfile(type);
 		}
@@ -470,7 +521,7 @@ public class DialogPopulationConfigurator extends JDialog {
 		}
 	}
 
-  /**
+	/**
 	 * 
 	 * @param evt
 	 */
@@ -482,10 +533,10 @@ public class DialogPopulationConfigurator extends JDialog {
 	 * 
 	 * @param evt
 	 */
-  private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {                                         
-  	
-  }
-  
+	private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {                                         
+		this.deletePopulation();
+	}
+
 	//------------------------------------------------------------------------------
 	//
 	//------------------------------------------------------------------------------
@@ -513,7 +564,7 @@ public class DialogPopulationConfigurator extends JDialog {
 	private void txtNumRudesActionPerformed(DocumentEvent e) {                                            
 		this.numRudes = this.txtNumRudes.getText();
 	}              
-	
+
 	private void rbNewestActionPerformed(java.awt.event.ActionEvent evt) {                                         
 		this.viewProfile.get(this.userType).put(viewModeKey, "0");
 	}                                        
@@ -577,7 +628,7 @@ public class DialogPopulationConfigurator extends JDialog {
 	private void txtComplainInsultActionPerformed(DocumentEvent e) {                                                  
 		this.complainProfile.get(this.userType).put(complainInsultKey, this.txtComplainInsult.getText());
 	}                                                 
-	
+
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
@@ -585,7 +636,7 @@ public class DialogPopulationConfigurator extends JDialog {
 	 */
 	private void initComponents() {
 
-    btnDelete = new javax.swing.JButton();
+		btnDelete = new javax.swing.JButton();
 		btnGroupViewCriterion = new ButtonGroup();
 		lblTitle = new JLabel();
 		lblAvailablePop = new JLabel();
@@ -596,26 +647,26 @@ public class DialogPopulationConfigurator extends JDialog {
 		lblUserProfiles = new JLabel();
 		panelUserProfile = new JPanel();
 		panelUploadProfile = new JPanel();
-		txtUploadSpam = new JDecimalField(2);
-		txtUploadPorn = new JDecimalField(2);
-		txtUploadViolent = new JDecimalField(2);
+		txtUploadSpam = new JDecimalField(2, 0.0, 1.0);
+		txtUploadPorn = new JDecimalField(2, 0.0, 1.0);
+		txtUploadViolent = new JDecimalField(2, 0.0, 1.0);
 		lblUploadFreq = new JLabel();
-		txtUploadInsult = new JDecimalField(2);
+		txtUploadInsult = new JDecimalField(2, 0.0, 1.0);
 		lblUploadCorrect = new JLabel();
 		lblUploadSpam = new JLabel();
 		lblUploadPorn = new JLabel();
 		lblUploadViolent = new JLabel();
 		lblUploadInsult = new JLabel();
-		txtUploadFreq = new JDecimalField(2);
-		txtUploadCorrect = new JDecimalField(2);
+		txtUploadFreq = new JDecimalField(2, 0.1, 1.0);
+		txtUploadCorrect = new JDecimalField(2, 0.0, 1.0);
 		sepUploadProfile = new JSeparator();
 		panelViewProfile = new JPanel();
 		lblTheReporter = new JLabel();
 		lblMultimedia = new JLabel();
 		lblForum = new JLabel();
-		txtViewTheReporter = new JDecimalField(2);
-		txtViewMultimedia = new JDecimalField(2);
-		txtViewForum = new JDecimalField(2);
+		txtViewTheReporter = new JDecimalField(2, 0.0, 1.0);
+		txtViewMultimedia = new JDecimalField(2, 0.0, 1.0);
+		txtViewForum = new JDecimalField(2, 0.0, 1.0);
 		lblViewCriterion = new JLabel();
 		rbNewest = new JRadioButton();
 		rbMostViewed = new JRadioButton();
@@ -623,10 +674,10 @@ public class DialogPopulationConfigurator extends JDialog {
 		panelComplainProfile = new JPanel();
 		lblProbComplain = new JLabel();
 		lblComplainSpam = new JLabel();
-		txtComplainSpam = new JDecimalField(2);
-		txtComplainPorn = new JDecimalField(2);
-		txtComplainViolent = new JDecimalField(2);
-		txtComplainInsult = new JDecimalField(2);
+		txtComplainSpam = new JDecimalField(2, 0.0, 1.0);
+		txtComplainPorn = new JDecimalField(2, 0.0, 1.0);
+		txtComplainViolent = new JDecimalField(2, 0.0, 1.0);
+		txtComplainInsult = new JDecimalField(2, 0.0, 1.0);
 		lblComplainPorn = new JLabel();
 		lblComplainViolent = new JLabel();
 		lblComplainInsult = new JLabel();
@@ -1026,59 +1077,59 @@ public class DialogPopulationConfigurator extends JDialog {
 		lblNamePop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 		lblNamePop.setText("Name");
 
-    btnDelete.setIcon(new javax.swing.ImageIcon("misc/launcher/icons/delete_small.png")); // NOI18N
-    btnDelete.setText("Delete population");
-    btnDelete.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            btnDeleteActionPerformed(evt);
-        }
-    });
+		btnDelete.setIcon(new javax.swing.ImageIcon("misc/launcher/icons/delete_small.png")); // NOI18N
+		btnDelete.setText("Delete population");
+		btnDelete.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				btnDeleteActionPerformed(evt);
+			}
+		});
 
-    javax.swing.GroupLayout panelPopLayout = new javax.swing.GroupLayout(panelPop);
-    panelPop.setLayout(panelPopLayout);
-    panelPopLayout.setHorizontalGroup(
-        panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelPopLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(panelUserProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(sepUserProfile)
-                .addGroup(panelPopLayout.createSequentialGroup()
-                    .addComponent(lblUserProfiles)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(cbUserProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE))
-                .addGroup(panelPopLayout.createSequentialGroup()
-                    .addGroup(panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txtNamePop, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblNamePop)
-                        .addComponent(btnDelete))
-                    .addGap(18, 18, 18)
-                    .addComponent(panelNumAgents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addContainerGap())
-    );
-    panelPopLayout.setVerticalGroup(
-        panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(panelPopLayout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelPopLayout.createSequentialGroup()
-                    .addComponent(lblNamePop)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(txtNamePop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(btnDelete))
-                .addComponent(panelNumAgents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(18, 18, 18)
-            .addComponent(sepUserProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addGroup(panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(lblUserProfiles)
-                .addComponent(cbUserProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(18, 18, 18)
-            .addComponent(panelUserProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
+		javax.swing.GroupLayout panelPopLayout = new javax.swing.GroupLayout(panelPop);
+		panelPop.setLayout(panelPopLayout);
+		panelPopLayout.setHorizontalGroup(
+				panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelPopLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addComponent(panelUserProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(sepUserProfile)
+								.addGroup(panelPopLayout.createSequentialGroup()
+										.addComponent(lblUserProfiles)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+										.addComponent(cbUserProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+										.addGap(0, 0, Short.MAX_VALUE))
+										.addGroup(panelPopLayout.createSequentialGroup()
+												.addGroup(panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+														.addComponent(txtNamePop, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addComponent(lblNamePop)
+														.addComponent(btnDelete))
+														.addGap(18, 18, 18)
+														.addComponent(panelNumAgents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+														.addContainerGap())
+				);
+		panelPopLayout.setVerticalGroup(
+				panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(panelPopLayout.createSequentialGroup()
+						.addContainerGap()
+						.addGroup(panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addGroup(panelPopLayout.createSequentialGroup()
+										.addComponent(lblNamePop)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+										.addComponent(txtNamePop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+										.addGap(18, 18, 18)
+										.addComponent(btnDelete))
+										.addComponent(panelNumAgents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+										.addGap(18, 18, 18)
+										.addComponent(sepUserProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+										.addGroup(panelPopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+												.addComponent(lblUserProfiles)
+												.addComponent(cbUserProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+												.addGap(18, 18, 18)
+												.addComponent(panelUserProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+												.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				);
 
 		cbAvailablePop.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 		cbAvailablePop.addActionListener(new java.awt.event.ActionListener() {

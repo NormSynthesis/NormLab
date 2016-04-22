@@ -19,7 +19,7 @@ public interface NormSynthesisStrategy {
 	 *
 	 */
 	public enum Option {
-		Example, Generic, Custom, BASE, IRON, SIMON, LION, DESMON; 
+		Example, User, Custom, BASE, IRON, SIMON, LION, DESMON; 
 	}
 
 	/**

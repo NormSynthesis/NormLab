@@ -162,9 +162,10 @@ public class DialogSimOnlineComConfiguration extends javax.swing.JDialog {
 		
 		try {
 			if(dialog.userSaved()) {
-				OnlineCommunityPopulation population = dialog.getPopulation();
-		    configManager.setAttribute("population", population.getName());
-		    this.lblPopulationName.setText(population.getName());	
+				OnlineCommunityPopulation pop = dialog.getPopulation();
+		    configManager.setAttribute("population", pop.getName());
+		    population = pop.getName();
+		    this.lblPopulationName.setText(population);	
 			}
     }
 		catch (Exception e) {
@@ -203,7 +204,7 @@ public class DialogSimOnlineComConfiguration extends javax.swing.JDialog {
 		lblContentQueueSize = new javax.swing.JLabel();
 		txtMaxSimTicks = new JIntegerField(1);
 		lblViolProb = new javax.swing.JLabel();
-		txtViolProb = new JDecimalField(2);
+		txtViolProb = new JDecimalField(2, 0.0, 1.00);
 		btnSave = new javax.swing.JButton();
 		btnExit = new javax.swing.JButton();
 		lblRandomSeed = new javax.swing.JLabel();

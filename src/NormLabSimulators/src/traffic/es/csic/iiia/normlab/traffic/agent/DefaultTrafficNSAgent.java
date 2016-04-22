@@ -133,7 +133,7 @@ implements TrafficNSAgent {
 		switch(option) {
 
 		/* Create and setup custom norm synthesis strategy */
-		case Custom:
+		case User:
 			NormSynthesisStrategy strategy;
 						
 			/* Get custom synthesis strategy */

@@ -165,7 +165,7 @@ public class DialogSimTrafficConfiguration extends javax.swing.JDialog {
 		lblMapNumber = new javax.swing.JLabel();
 		txtMap = new JIntegerField(1,1);
 		lblViolProb = new javax.swing.JLabel();
-		txtViolProb = new JDecimalField(2);
+		txtViolProb = new JDecimalField(2, 0.0, 1.00);
 		btnSave = new javax.swing.JButton();
 		btnExit = new javax.swing.JButton();
 		lblRandomSeed = new javax.swing.JLabel();

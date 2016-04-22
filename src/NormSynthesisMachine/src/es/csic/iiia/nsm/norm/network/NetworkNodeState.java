@@ -10,7 +10,7 @@ package es.csic.iiia.nsm.norm.network;
 public enum NetworkNodeState {
 	Created, 
 	
-	Hibernated, 
+	Candidate, 
 	
 	Active, 
 	

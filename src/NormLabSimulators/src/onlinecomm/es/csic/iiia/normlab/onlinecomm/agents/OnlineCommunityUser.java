@@ -310,9 +310,9 @@ public class OnlineCommunityUser implements EnvironmentAgent {
 	 */
 	public void viewAndComplaintContent() {
 
-		/* To force much more views than uploads. NEVER remove this */
-		
-		for(int i=0; i<20; i++) {
+		/* To force more views than uploads */
+		for(int i=0; i<5; i++) {
+			
 			//Erase the actual view and complaint lists if the actualAgent is the first one.
 			List<IContent> actualViewList = contextData.getActualViewList();
 

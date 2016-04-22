@@ -256,7 +256,6 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.normsDefaultUtility = "0.5";
 		this.normsMinEvaluationsToDecide = "1";
 		this.normGeneralisationApproach = "1";
-		this.normEvaluationLearningRate = "0.0";
 		this.normGenerationApproach = "0";
 	}
 
@@ -269,13 +268,12 @@ public class DialogSynthesisConfiguration extends JDialog {
 		this.normEvaluationMechanism = "1";
 		this.normsDefaultUtility = "0.0";
 		this.normGeneralisationApproach = "1";
-		this.normEvaluationLearningRate = "0.0";
 		this.normGroupsMinEvaluationsToDecide = "0";
 		this.normGenerationApproach = "1";
 
 		int num = Integer.valueOf(normsMinEvaluationsToDecide);
 		if(num <= 1) {
-			this.normsMinEvaluationsToDecide = "10";	
+			this.normsMinEvaluationsToDecide = "10";
 		}
 	}
 
@@ -401,6 +399,29 @@ public class DialogSynthesisConfiguration extends JDialog {
 
 	/**
 	 * 
+	 */
+	private void checkNormsDefaultUtility() {
+		
+		/* Check only in the case of BASE, IRON, SIMON and LION */
+		if(strategy >=3 && strategy <=6 && !this.normEffDeactThreshold.isEmpty() &&
+				!this.normNecDeactThreshold.isEmpty()) {
+			
+			double defUtility = Double.valueOf(this.normsDefaultUtility);
+			double effDeactThreshold = Double.valueOf(this.normEffDeactThreshold);
+			double necDeactThreshold = Double.valueOf(this.normNecDeactThreshold);
+			double maxDeactThreshold = Math.max(effDeactThreshold, necDeactThreshold);
+			if(maxDeactThreshold > defUtility) {
+				this.txtDefUtility.setText(String.valueOf(maxDeactThreshold));	
+			}
+			else {
+				this.txtDefUtility.setText("0.5");
+			}
+		}
+	}
+
+	
+	/**
+	 * 
 	 * @param evt
 	 */
 	private void btnSaveActionPerformed(ActionEvent evt) {
@@ -500,10 +521,12 @@ public class DialogSynthesisConfiguration extends JDialog {
 
 	private void txtDeactEffActionPerformed(DocumentEvent evt) {
 		this.normEffDeactThreshold = this.txtDeactEff.getText();
+		this.checkNormsDefaultUtility();
 	}
 
 	private void txtDeactNecActionPerformed(DocumentEvent evt) {
 		this.normNecDeactThreshold = this.txtDeactNec.getText();
+		this.checkNormsDefaultUtility();
 	}
 
 	private void txtGenEffActionPerformed(DocumentEvent evt) {
@@ -603,20 +626,20 @@ public class DialogSynthesisConfiguration extends JDialog {
 		rbDeep = new javax.swing.JRadioButton();
 		txtGenStep = new JIntegerField(1);
 		lblGenThresholds = new javax.swing.JLabel();
-		txtGenEff = new JDecimalField(2);
+		txtGenEff = new JDecimalField(2, 0.0, 1.00);
 		lblGenEff = new javax.swing.JLabel();
 		lblGenNec = new javax.swing.JLabel();
-		txtGenNec = new JDecimalField(2);
+		txtGenNec = new JDecimalField(2, 0.0, 1.00);
 		panelEvaluation = new javax.swing.JPanel();
 		lblEvMech = new javax.swing.JLabel();
 		rbBB = new javax.swing.JRadioButton();
 		rbMAvg = new javax.swing.JRadioButton();
 		lblLearningFactor = new javax.swing.JLabel();
-		txtLearningFactor = new JDecimalField(2);
+		txtLearningFactor = new JDecimalField(2, 0.1, 0.99);
 		lblPerfRangSize = new javax.swing.JLabel();
 		txtPerfRangeSize = new JIntegerField(1);
 		lblDefUtility = new javax.swing.JLabel();
-		txtDefUtility = new JDecimalField(2);
+		txtDefUtility = new JDecimalField(2, 0.0, Double.MAX_VALUE);
 		btnSave = new javax.swing.JButton();
 		btnExit = new javax.swing.JButton();
 		lblTitle = new javax.swing.JLabel();
@@ -635,18 +658,18 @@ public class DialogSynthesisConfiguration extends JDialog {
 		lblActThresholds = new javax.swing.JLabel();
 		lblDeactThresholds = new javax.swing.JLabel();
 		lblReactivityGroups = new javax.swing.JLabel();
-		txtDeliberativenessGroups = new JIntegerField(0);
+		txtDeliberativenessGroups = new JIntegerField(1);
 		lblActApproach = new javax.swing.JLabel();
 		rbReactive = new javax.swing.JRadioButton();
 		rbDeliberative = new javax.swing.JRadioButton();
 		lblActEff = new javax.swing.JLabel();
-		txtActEff = new JDecimalField(2);
+		txtActEff = new JDecimalField(2, 0.0, 1.00);
 		lblDeactEff = new javax.swing.JLabel();
-		txtDeactEff = new JDecimalField(2);
+		txtDeactEff = new JDecimalField(2, 0.0, 1.00);
 		lblActNec = new javax.swing.JLabel();
-		txtActNec = new JDecimalField(2);
+		txtActNec = new JDecimalField(2, 0.0, 1.00);
 		lblDeactNec = new javax.swing.JLabel();
-		txtDeactNec = new JDecimalField(2);
+		txtDeactNec = new JDecimalField(2, 0.0, 1.00);
 		lblInfo = new javax.swing.JLabel();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);

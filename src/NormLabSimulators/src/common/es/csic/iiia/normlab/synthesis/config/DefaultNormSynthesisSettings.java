@@ -113,8 +113,8 @@ public abstract class DefaultNormSynthesisSettings implements NormSynthesisSetti
 		
 		switch(strategy) {
 		case 	0: this.synthesisStrategy = NormSynthesisStrategy.Option.Example;		break;
-		case 	1:	this.synthesisStrategy = NormSynthesisStrategy.Option.Custom;		break;
-		case 	2:	this.synthesisStrategy = NormSynthesisStrategy.Option.Generic;	break;
+		case 	1:	this.synthesisStrategy = NormSynthesisStrategy.Option.User;		break;
+		case 	2:	this.synthesisStrategy = NormSynthesisStrategy.Option.Custom;	break;
 		case 	3:	this.synthesisStrategy = NormSynthesisStrategy.Option.BASE;			break;
 		case 	4:	this.synthesisStrategy = NormSynthesisStrategy.Option.IRON;			break;
 		case 	5:	this.synthesisStrategy = NormSynthesisStrategy.Option.SIMON;		break;

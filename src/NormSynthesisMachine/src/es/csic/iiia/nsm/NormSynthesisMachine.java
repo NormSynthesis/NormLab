@@ -24,7 +24,6 @@ import es.csic.iiia.nsm.sensing.Monitor;
 import es.csic.iiia.nsm.sensing.Sensor;
 import es.csic.iiia.nsm.strategy.GenericSynthesisStrategy;
 import es.csic.iiia.nsm.strategy.NormSynthesisStrategy;
-import es.csic.iiia.nsm.visualization.NormSynthesisInspector;
 
 /**
  * The Norm Synthesis Machine (NSM), containing:
@@ -86,7 +85,6 @@ public class NormSynthesisMachine {
 
 	/* Metrics and visualisation */
 	private NormSynthesisMetrics metrics;					// Norm synthesis metrics
-	private NormSynthesisInspector tracer; 				// GUI
 
 	private boolean useGui;													// Use GUI?
 	private boolean firstExecution;								// First execution of the strategy?
@@ -227,21 +225,12 @@ public class NormSynthesisMachine {
 		if(this.firstExecution) {
 			this.firstExecution= false;
 			this.checkSetup();
-
-			/* Create the GUI if required) */
-			if(this.useGui) {
-				tracer = new NormSynthesisInspector(this);
-				tracer.show();	
-			}
 		}
 
 		/* Executes the strategy and get the resulting normative system */
 		NormativeSystem ns = this.strategy.execute();
 		this.metrics.update(timeStep);
 
-		if(this.useGui) {
-			tracer.refresh();
-		}
 		return ns;
 	}
 
@@ -272,7 +261,7 @@ public class NormSynthesisMachine {
 
 		/* Create generic synthesis strategy */
 		if(option != NormSynthesisStrategy.Option.Example &&
-				option != NormSynthesisStrategy.Option.Custom) {
+				option != NormSynthesisStrategy.Option.User) {
 
 			this.strategy = new GenericSynthesisStrategy(this, genMode, genStep);
 		}
@@ -359,7 +348,7 @@ public class NormSynthesisMachine {
 
 		/* Check the sensors and the omega function if the strategy is not custom */
 		if(strategy != NormSynthesisStrategy.Option.Example &&
-				strategy != NormSynthesisStrategy.Option.Custom) {
+				strategy != NormSynthesisStrategy.Option.User) {
 
 			if(this.monitor.getNumSensors() == 0) {
 				throw new IncorrectSetupException("No sensors have been added yet");
@@ -511,15 +500,6 @@ public class NormSynthesisMachine {
 	 */
 	public boolean isGUI() {
 		return this.useGui;
-	}
-
-	/**
-	 * Returns the norms tracer
-	 * 
-	 * @return the norms tracer
-	 */
-	public NormSynthesisInspector getTracer() {
-		return this.tracer;
 	}
 
 	/**

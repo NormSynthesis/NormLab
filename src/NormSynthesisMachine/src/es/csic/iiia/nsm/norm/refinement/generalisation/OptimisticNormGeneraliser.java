@@ -343,7 +343,7 @@ public class OptimisticNormGeneraliser implements NormGeneraliser {
 
 				/* If the general norm represents a norm that must not be represented, 
 				 * then the general norm is not feasible */
-				if(nState != NetworkNodeState.Hibernated) {
+				if(nState != NetworkNodeState.Candidate) {
 					if(this.normReasoner.satisfies(norm, genNorm) && 
 							!norm.equals(genNorm))	
 					{

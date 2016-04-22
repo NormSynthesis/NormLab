@@ -275,6 +275,7 @@ public class PopulationXMLManager {
 
 		StreamResult result = new StreamResult(fos);
 		aTransformer.transform(source, result);
+		fos.close();
 	}
 
 	/**

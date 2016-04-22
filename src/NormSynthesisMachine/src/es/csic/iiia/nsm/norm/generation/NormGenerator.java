@@ -56,7 +56,7 @@ public class NormGenerator {
 	protected NormGenerator.Approach nGenerationApproach;
 	
 	/**
-	 * Constructor
+	 * Constructor 
 	 */
 	public NormGenerator(NormSynthesisSettings nsmSettings, Monitor monitor, 
 			NormReasoner normReasoner, DomainFunctions dmFunctions,
@@ -139,7 +139,7 @@ public class NormGenerator {
 			activatedNorms.add(norm);
 		}
 		else {
-			this.operators.hibernate(norm);
+			this.operators.propose(norm);
 		}
   }
 
@@ -230,8 +230,8 @@ public class NormGenerator {
 
 		for(Norm n : normsApplicable.getApplicableNorms()) {
 			NetworkNodeState nState = this.normativeNetwork.getState(n);
-			boolean isHibernated = nState == NetworkNodeState.Hibernated;
 			boolean isRepresented = this.normativeNetwork.isRepresented(n);
+			boolean isHibernated = nState == NetworkNodeState.Candidate;
 			boolean isSubstituted = nState == NetworkNodeState.Substituted;
 			
 			if(isRepresented || isHibernated || isSubstituted) {

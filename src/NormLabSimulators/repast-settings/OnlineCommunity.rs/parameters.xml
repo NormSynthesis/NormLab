@@ -4,7 +4,7 @@
 	<!-- SIMULATOR SETTINGS -->
 	<!-- ================== -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="90moderates-10spammers" displayName="Population to use" isReadOnly="false" name="population" type="string"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter" defaultValue="MyPopulation" displayName="Population to use" isReadOnly="false" name="population" type="string"/>
 	
 	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="Default Random Seed" isReadOnly="false" name="randomSeed" type="int"/>
 
@@ -47,7 +47,7 @@
 		 6 = LION
 		 7 = DESMON) -->
 		 
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="2" displayName="NSM: Norm synthesis strategy" isReadOnly="false" name="normSynthesisStrategy" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="7" displayName="NSM: Norm synthesis strategy" isReadOnly="false" name="normSynthesisStrategy" type="int"/>
 	
 	<!-- Norm synthesis example (only for traffic)
 		1 = No norms rule the MAS. No norm synthesis. 
@@ -78,15 +78,15 @@
 		 0 = use reinforcement learning and Bollinger Bands
 		 1 = with cumulative moving average -->
 		 
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="1" displayName="Norm evaluation mechanism" isReadOnly="false" name="normEvaluationMechanism" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="Norm evaluation mechanism" isReadOnly="false" name="normEvaluationMechanism" type="int"/>
 	
 	<!-- Norm evaluation learning rate -->
 					
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.00" displayName="NSM: Norm evaluation learning rate" isReadOnly="false" name="normEvaluationLearningRate" type="double"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.10" displayName="NSM: Norm evaluation learning rate" isReadOnly="false" name="normEvaluationLearningRate" type="double"/>
 							
 	<!-- Default norms' utilities -->
 					
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.00" displayName="NSM: Norms default utility" isReadOnly="false" name="normsDefaultUtility" type="double"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter" defaultValue="0.50" displayName="NSM: Norms default utility" isReadOnly="false" name="normsDefaultUtility" type="double"/>
 				
 	<!-- Size of the moving average to compute norms' cumulative performances -->
 					
@@ -128,11 +128,11 @@
 		0 = Reactive activation. Norms are activated right after being created.
 		1 = Deliberative activation. Norms are activated when there is enough evidence to consider them as necessary -->
 		
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="1" displayName="NSM: Norm activation approach" isReadOnly="false" name="normGenerationApproach" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="NSM: Norm activation approach" isReadOnly="false" name="normGenerationApproach" type="int"/>
 
 	<!-- Minimum amount of evaluations required to decide if norms are effective and necessary -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="25" displayName="NSM: Norms min. evaluations classify" isReadOnly="false" name="normsMinEvaluationsToDecide" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="1" displayName="NSM: Norms min. evaluations classify" isReadOnly="false" name="normsMinEvaluationsToDecide" type="int"/>
 				
 	<!-- Threshold above which norms are considered to be effective enough to be part of the normative system -->
 	
@@ -152,7 +152,7 @@
 		
 	<!-- Minimum amount of evaluations required to decide if norm groups are effective -->
 	
-	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="0" displayName="NSM: Norm groups min. evaluations classify" isReadOnly="false" name="normGroupsMinEvaluationsToDecide" type="int"/>
+	<parameter converter="repast.simphony.parameter.StringConverterFactory$IntConverter" defaultValue="25" displayName="NSM: Norm groups min. evaluations classify" isReadOnly="false" name="normGroupsMinEvaluationsToDecide" type="int"/>
 
 	<!-- Name of the user's self-made norm synthesis strategy -->
 	

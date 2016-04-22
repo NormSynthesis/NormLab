@@ -1,11 +1,13 @@
 package es.csic.iiia.normlab.onlinecomm.agents;
 
+import repast.simphony.engine.environment.RunEnvironment;
 import es.csic.iiia.normlab.onlinecomm.agents.norms.OnlineCommunityFactFactory;
 import es.csic.iiia.normlab.onlinecomm.agents.norms.OnlineCommunityNormEngine;
 import es.csic.iiia.normlab.onlinecomm.agents.norms.OnlineCommunityUserReasoner;
 import es.csic.iiia.normlab.onlinecomm.config.OnlineCommunitySettings;
 import es.csic.iiia.normlab.onlinecomm.context.ContextData;
 import es.csic.iiia.normlab.onlinecomm.nsm.OnlineCommunityDomainFunctions;
+import es.csic.iiia.normlab.visualization.NormLabInspector;
 import es.csic.iiia.nsm.agent.language.PredicatesDomains;
 import es.csic.iiia.nsm.agent.language.TaxonomyOfTerms;
 import es.csic.iiia.nsm.config.DomainFunctions;
@@ -30,6 +32,8 @@ public class OnlineCommunityManager {
 
 	private PredicatesDomains predDomains;
 	private DomainFunctions dmFunctions;
+	private boolean useGui;
+	private NormLabInspector nInspector;
 	
 	//---------------------------------------------------------------------------
 	// Methods
@@ -62,6 +66,8 @@ public class OnlineCommunityManager {
 		/* Create agents reasoner */
 		this.usersReasoner = new OnlineCommunityUserReasoner(predDomains,
 				contextData, ocSettings);
+		
+		this.useGui = !RunEnvironment.getInstance().isBatch();
 	}
 
 	/**
@@ -72,6 +78,11 @@ public class OnlineCommunityManager {
 		this.contextData.getActualUploadList().clear();
 		this.contextData.getActualComplaintList().clear();
 		this.contextData.getActualViewList().clear();
+		
+		/* Display metrics */
+		if(this.useGui) {
+			nInspector.refresh();
+		}
 	}
 
 	/**
@@ -114,6 +125,13 @@ public class OnlineCommunityManager {
 		return this.dmFunctions;
 	}
 
+	/**
+	 * 
+	 */
+	public void setNormsInspector(NormLabInspector nsInspector) {
+		this.nInspector = nsInspector;
+	}
+	
 	/**
 	 * Creates the predicate and their domains for the traffic scenario
 	 */
